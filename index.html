@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -21,7 +21,7 @@
             color: #D1D5DB; /* gray-300 */
         }
 
-        /* print.css — A4 + Apple-like minimal print layout (no content edits) */
+        /* print.css — A4 + Consulting firm style print layout */
         /* 仅在打印时生效 */
         @media print {
           /* A4 页面与页边距 */
@@ -30,50 +30,60 @@
             margin: 18mm 18mm 20mm 18mm; /* 上/右/下/左 */
           }
 
-          /* 基础：字体与颜色尽量克制、保持网页原色 */
+          /* 基础：字体与颜色，确保打印效果 */
           html, body {
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
             color: #111827;
-            background: #ffffff !important; /* 白底 */
+            background: #ffffff !important;
             font-family: "SF Pro Text", "Inter", "Noto Sans SC", system-ui, -apple-system, Segoe UI, Arial, sans-serif;
-            line-height: 1.5;
+            line-height: 1.45;
+            font-size: 10pt;
           }
 
-          /* 去掉网页中的多余留白，让打印更紧凑但不挤 */
+          /* 优化布局，减少空白 */
           .container {
             max-width: 100% !important;
             padding: 0 !important;
+            margin: 0 !important;
           }
-          header, main, section, div, article {
+          section, header.text-center {
+            margin-bottom: 1.5rem !important; 
+          }
+          
+          header, main, section, div, article, .card {
             break-inside: avoid; /* 避免元素被切断 */
           }
 
-          /* 标题：保持层级，不改变文本 */
-          h1 { font-weight: 700; font-size: 24pt; margin: 0 0 10pt; }
-          h2 { font-weight: 700; font-size: 16pt; margin: 14pt 0 8pt; border-bottom: 1px solid #E5E7EB; padding-bottom: 4pt;}
-          h3 { font-weight: 600; font-size: 12pt; margin: 10pt 0 6pt; }
-          p, li { font-size: 10.5pt; }
+          /* 标题层级 */
+          h1 { font-weight: 700; font-size: 22pt; margin: 0 0 10pt; }
+          h2 { font-weight: 700; font-size: 16pt; margin: 20pt 0 10pt; border-bottom: 1px solid #E5E7EB !important; padding-bottom: 5pt;}
+          h3 { font-weight: 600; font-size: 12pt; margin: 12pt 0 6pt; }
+          p, li { font-size: 10pt; margin-bottom: 0.5em; }
 
-          /* 表格：细边、浅灰分隔；不拆页 */
+          /* 表格风格优化 */
           table { width: 100% !important; border-collapse: collapse; }
-          thead { background: #F3F4F6 !important; }
-          th, td { border-bottom: 0.4pt solid #E5E7EB; padding: 6pt 8pt; font-size: 10pt; }
+          thead { background: #F9FAFB !important; }
+          th, td { border-bottom: 0.5pt solid #E5E7EB; padding: 5pt 7pt; font-size: 9pt; }
           tr { break-inside: avoid; }
 
-          /* 图表/画布：尽量整块显示，避免跨页 */
+          /* 图表/画布 */
           canvas, svg, img { max-width: 100% !important; height: auto !important; break-inside: avoid; }
+          .chart-wrapper { break-inside: avoid; }
 
-          /* 卡片/阴影：打印去阴影、保留边框 */
-          .shadow, .shadow-md, .shadow-lg, .shadow-sm, [class*="shadow"] { box-shadow: none !important; border: 0.4pt solid #E5E7EB; }
-          .rounded-lg, .rounded, .rounded-md { border-radius: 6pt !important; }
+          /* 卡片/阴影：打印去阴影、保留细边框 */
+          .shadow, .shadow-md, .shadow-lg, .shadow-sm, [class*="shadow"] { box-shadow: none !important; border: 0.5pt solid #E5E7EB; }
+          .rounded-lg, .rounded, .rounded-md { border-radius: 4pt !important; }
           .bg-white { background: #ffffff !important; }
           .border, .border-* { border-color: #E5E7EB !important; }
 
-          /* 避免按钮、切换等交互控件打印 */
+          /* 隐藏不必要的交互元素 */
           button, [role="button"], #lang-switcher { display: none !important; }
+          a { text-decoration: none; color: inherit; }
+          .text-blue-600 { color: #111827 !important; }
 
-          /* 翻页控制：标题不孤行/寡行 */
+
+          /* 翻页控制 */
           h2, h3 { page-break-after: avoid; }
           table, figure { page-break-inside: avoid; }
         }
@@ -176,53 +186,68 @@
                 </div>
             </section>
 
-            <!-- Section 1.1: Key Technical Specifications -->
-            <section id="tech-specs" class="mb-16">
-                <h3 class="text-xl font-bold text-center mb-10 text-gray-800" data-lang-key="section1_1_title">1.1. 关键技术指标与性能基准</h3>
-                <p class="text-center text-gray-600 max-w-3xl mx-auto mb-10" data-lang-key="section1_1_desc">为确保对蓝湿皮实现最高质量的切割，理想的纯水射流系统需在多个技术层面达到顶尖标准。这些参数共同决定了切割边缘的光洁度、尺寸精度以及材料利用率，是评估系统长期价值和技术领先性的核心依据。</p>
-                <div class="overflow-x-auto bg-white rounded-lg shadow-md">
-                    <table class="w-full text-left table-auto">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider" data-lang-key="spec_table_aspect">技术领域</th>
-                                <th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider" data-lang-key="spec_table_benchmark">性能基准</th>
-                                <th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider" data-lang-key="spec_table_significance">战略意义</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200">
-                            <tr>
-                                <td class="px-6 py-4 font-semibold" data-lang-key="spec_hp_system_title">高压系统</td>
-                                <td class="px-6 py-4" data-lang-key="spec_hp_system_benchmark">压力波动 < ±1%；动态响应 < 50ms</td>
-                                <td class="px-6 py-4" data-lang-key="spec_hp_system_significance">保证复杂轮廓切割的边缘一致性</td>
-                            </tr>
-                            <tr>
-                                <td class="px-6 py-4 font-semibold" data-lang-key="spec_cutting_head_title">切割头总成</td>
-                                <td class="px-6 py-4" data-lang-key="spec_cutting_head_benchmark">钻石喷嘴 (0.08-0.12mm)；对中 < 0.01mm</td>
-                                <td class="px-6 py-4" data-lang-key="spec_cutting_head_significance">确保射流能量集中，提升精度与耗材寿命</td>
-                            </tr>
-                            <tr>
-                                <td class="px-6 py-4 font-semibold" data-lang-key="spec_motion_control_title">运动控制系统</td>
-                                <td class="px-6 py-4" data-lang-key="spec_motion_control_benchmark">重复定位精度 < ±0.02mm；速度前瞻算法</td>
-                                <td class="px-6 py-4" data-lang-key="spec_motion_control_significance">实现高精度复杂切割，防止拐角材料变形</td>
-                            </tr>
-                            <tr>
-                                <td class="px-6 py-4 font-semibold" data-lang-key="spec_software_title">软件与算法</td>
-                                <td class="px-6 py-4" data-lang-key="spec_software_benchmark">智能嵌套算法；专家工艺数据库</td>
-                                <td class="px-6 py-4" data-lang-key="spec_software_significance">最大化材料利用率，降低废品率</td>
-                            </tr>
-                             <tr>
-                                <td class="px-6 py-4 font-semibold" data-lang-key="spec_structure_title">机械结构</td>
-                                <td class="px-6 py-4" data-lang-key="spec_structure_benchmark">聚合物混凝土基座；平台平整度 < ±0.1mm/m</td>
-                                <td class="px-6 py-4" data-lang-key="spec_structure_significance">提供长期稳定性，吸收微振动，保证精度</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <!-- Section 2: Pressure Window & Pump Selection Strategy -->
+            <section id="pressure-analysis" class="mb-16">
+                <h2 class="text-2xl font-bold text-center mb-8 text-gray-900 border-b-2 border-blue-500 pb-2 inline-block">2. 蓝湿皮切割压力窗口与泵选型策略</h2>
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-4">核心结论</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li><strong>推荐压力窗口:</strong> 蓝湿皮日常切割推荐运行在 <strong>220–320 MPa</strong>。此区间在切割速度和边缘质量之间取得了最佳平衡。400 MPa虽具备峰值性能，但需谨慎控制以避免损伤材料。</li>
+                        <li><strong>泵选型原则:</strong> 优先选择标称380–400 MPa的增压泵，但在日常工艺中降压使用，保留足够的技术余量以应对厚料或高速场景。</li>
+                        <li><strong>品牌差异与TCO:</strong> 国际品牌泵（如KMT, BFT）初始投资高，但因压力波动小、密封寿命长而拥有更可控的长期拥有成本(TCO)。国产品牌泵首购价低40-65%，但需接受更高的维护频率和潜在的停机风险。</li>
+                    </ul>
+                </div>
+
+                <div class="card mt-8">
+                    <h3 class="text-xl font-bold mb-4">高压泵关键指标对比：国际 vs. 国产品牌</h3>
+                     <div class="overflow-x-auto border rounded-lg">
+                        <table class="w-full text-left table-auto">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="px-6 py-3 text-sm font-bold text-gray-600">指标</th>
+                                    <th class="px-6 py-3 text-sm font-bold text-gray-600">国际品牌 (KMT, BFT等)</th>
+                                    <th class="px-6 py-3 text-sm font-bold text-gray-600">国产品牌 (Teenking, HEAD等)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 font-medium">压力稳定度</td>
+                                    <td class="px-6 py-4">±0.5–1.0%</td>
+                                    <td class="px-6 py-4">±1.5–3% (机型差异大)</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 font-medium">密封寿命 (纯水)</td>
+                                    <td class="px-6 py-4">500–1,000+ 小时/套</td>
+                                    <td class="px-6 py-4">200–600 小时/套</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 font-medium">新机价格 (30 HP级)</td>
+                                    <td class="px-6 py-4">€70k–€100k</td>
+                                    <td class="px-6 py-4">€20k–€35k</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 font-medium">5年TCO (维护段)</td>
+                                    <td class="px-6 py-4">€55k–€85k (停机损失小)</td>
+                                    <td class="px-6 py-4">€35k–€65k (备件便宜但次数多)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 
-            <!-- Section 2: Market Price Structure and ROI Evaluation -->
+            <!-- Section 3: Visualizing the Competitive Landscape -->
+            <section id="visualization" class="mb-16">
+                <h2 class="text-2xl font-bold text-center mb-8 text-gray-900 border-b-2 border-blue-500 pb-2 inline-block" data-lang-key="section4_title">3. 竞争格局可视化：市场定位矩阵</h2>
+                <div class="bg-white rounded-lg shadow-md p-4 sm:p-8">
+                    <p class="text-center text-gray-600 mb-6" data-lang-key="section4_desc">本市场定位矩阵将“初始投资成本”与“技术适用性”两个核心维度进行可视化呈现。每个数据点代表一个供应商，其在矩阵中的位置直观地揭示了其市场定位和竞争策略，为我们的战略采购和合作伙伴选择提供了清晰的决策地图。</p>
+                    <canvas id="priceAdaptabilityChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Section 4: Market Price Structure and ROI Evaluation -->
             <section id="price" class="mb-16">
-                <h2 class="text-2xl font-bold text-center mb-8 text-gray-900 border-b-2 border-blue-500 pb-2 inline-block" data-lang-key="section2_title">2. 市场价格体系与投资回报评估</h2>
+                <h2 class="text-2xl font-bold text-center mb-8 text-gray-900 border-b-2 border-blue-500 pb-2 inline-block" data-lang-key="section2_title">4. 市场价格体系与投资回报评估</h2>
                 <div class="overflow-x-auto bg-white rounded-lg shadow-md">
                     <table class="w-full text-left table-auto">
                         <thead class="bg-gray-200">
@@ -275,59 +300,6 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
-            </section>
-
-            <!-- Section 3: Asset Value Analysis -->
-            <section id="source" class="mb-16">
-                <h2 class="text-2xl font-bold text-center mb-8 text-gray-900 border-b-2 border-blue-500 pb-2 inline-block" data-lang-key="section3_title">3. 资产价值分析：二手市场数据洞察</h2>
-                <div class="bg-white rounded-lg shadow-md p-8">
-                    <p class="text-gray-700 mb-6" data-lang-key="section3_desc">为了提供一个透明且全面的投资视角，我们对公开的二手设备市场数据进行了分析。二手市场的交易价格是衡量一个品牌长期价值和市场认可度的重要指标，它直接关系到固定资产的保值能力和最终的投资回报。</p>
-                    
-                    <h4 class="font-bold text-lg mb-4" data-lang-key="section3_subtitle">二手市场数据参考：</h4>
-                    <div class="overflow-x-auto border rounded-lg">
-                        <table class="w-full text-left table-auto">
-                            <thead class="bg-gray-100">
-                                <tr>
-                                    <th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">品牌 / 型号状态／年份 / 地点</th>
-                                    <th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">价格</th>
-                                    <th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">来源链接</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200">
-                                <tr><td class="px-6 py-4 font-medium">Resato PJ‑2‑4000 (2009)<br><span class="text-xs text-gray-500">二手, 比利时</span></td><td class="px-6 py-4">€50,000</td><td class="px-6 py-4">machineryline.com</td></tr>
-                                <tr><td class="px-6 py-4 font-medium">Perndorfer WSS-4020 (2017)<br><span class="text-xs text-gray-500">二手, 德国</span></td><td class="px-6 py-4">€70,000</td><td class="px-6 py-4">resale.info</td></tr>
-                                <tr><td class="px-6 py-4 font-medium">Waterjet Sweden NC 系列<br><span class="text-xs text-gray-500">二手, 波斯尼亚</span></td><td class="px-6 py-4">€106,000</td><td class="px-6 py-4">exapro.com</td></tr>
-                                <tr><td class="px-6 py-4 font-medium">Expert Variojet (45 h)<br><span class="text-xs text-gray-500">展样机, 德国</span></td><td class="px-6 py-4">€125,000 + VAT</td><td class="px-6 py-4">used-machines.com</td></tr>
-                                <tr><td class="px-6 py-4 font-medium">Expert Variojet<br><span class="text-xs text-gray-500">展样机, 德国</span></td><td class="px-6 py-4">€145,000 EXW + VAT</td><td class="px-6 py-4">machineseeker.com</td></tr>
-                                <tr><td class="px-6 py-4 font-medium">Expert Variojet (2009)<br><span class="text-xs text-gray-500">二手, 德国</span></td><td class="px-6 py-4">€75,000</td><td class="px-6 py-4">resale.info</td></tr>
-                                <tr><td class="px-6 py-4 font-medium">OMAX 水刀 (平均)<br><span class="text-xs text-gray-500">二手, 美国/通用</span></td><td class="px-6 py-4">$19,500 – $99,900</td><td class="px-6 py-4">equipt.com</td></tr>
-                                <tr><td class="px-6 py-4 font-medium">OMAX 60120 (2008)<br><span class="text-xs text-gray-500">二手, 美国</span></td><td class="px-6 py-4">$39,950</td><td class="px-6 py-4">ebay.com</td></tr>
-                                <tr><td class="px-6 py-4 font-medium">OMAX Maxiem 2040 (2020)<br><span class="text-xs text-gray-500">二手, 美国</span></td><td class="px-6 py-4">$129,995</td><td class="px-6 py-4">ebay.com</td></tr>
-                                <tr><td class="px-6 py-4 font-medium">Flow I-6012 (1999)<br><span class="text-xs text-gray-500">二手, 美国</span></td><td class="px-6 py-4">$11,750 (OBO)</td><td class="px-6 py-4">machinetools.com</td></tr>
-                                <tr><td class="px-6 py-4 font-medium">Flow 水刀 (4'×8' 2004)<br><span class="text-xs text-gray-500">二手, 美国</span></td><td class="px-6 py-4">$65,000</td><td class="px-6 py-4">surplusrecord.com</td></tr>
-                                <tr><td class="px-6 py-4 font-medium">Bystronic ByJet Pro 3015<br><span class="text-xs text-gray-500">二手, 匈牙利</span></td><td class="px-6 py-4">€41,500</td><td class="px-6 py-4">exapro.com</td></tr>
-                                <tr><td class="px-6 py-4 font-medium">Intermac Primus 322 (2019)<br><span class="text-xs text-gray-500">二手, 克罗地亚</span></td><td class="px-6 py-4">€71,000</td><td class="px-6 py-4">exapro.com</td></tr>
-                                <tr><td class="px-6 py-4 font-medium">Water Jet Sweden NC 3045<br><span class="text-xs text-gray-500">二手, 德国</span></td><td class="px-6 py-4">€145,000</td><td class="px-6 py-4">exapro.com</td></tr>
-                                <tr><td class="px-6 py-4 font-medium">Flow Mach 100<br><span class="text-xs text-gray-500">二手, 波兰</span></td><td class="px-6 py-4">€116,000</td><td class="px-6 py-4">exapro.com</td></tr>
-                                <tr><td class="px-6 py-4 font-medium">Flow Mach 3<br><span class="text-xs text-gray-500">二手, 克罗地亚</span></td><td class="px-6 py-4">€36,000 EXW</td><td class="px-6 py-4">used-machines.com</td></tr>
-                                <tr><td class="px-6 py-4 font-medium">CMS Tecnocut MILESTONE S 2040<br><span class="text-xs text-gray-500">二手, 德国</span></td><td class="px-6 py-4">询价</td><td class="px-6 py-4">used-machines.com</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="mt-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
-                        <p class="font-semibold text-blue-800" data-lang-key="section3_conclusion_title">分析结论：</p>
-                        <p class="text-blue-700" data-lang-key="section3_conclusion_text">二手市场数据明确显示，欧洲领先品牌设备在多年使用后依然保持着强劲的资产价值。这种高保值率不仅验证了其新设备定价的合理性，更重要的是，它证明了投资于这些品牌代表着一项稳健的长期资本配置，能够有效抵御资产贬值风险，为股东创造持久价值。</p>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- Section 4: Visualizing the Competitive Landscape -->
-            <section id="visualization" class="mb-16">
-                <h2 class="text-2xl font-bold text-center mb-8 text-gray-900 border-b-2 border-blue-500 pb-2 inline-block" data-lang-key="section4_title">4. 竞争格局可视化：市场定位矩阵</h2>
-                <div class="bg-white rounded-lg shadow-md p-4 sm:p-8">
-                    <p class="text-center text-gray-600 mb-6" data-lang-key="section4_desc">本市场定位矩阵将“初始投资成本”与“技术适用性”两个核心维度进行可视化呈现。每个数据点代表一个供应商，其在矩阵中的位置直观地揭示了其市场定位和竞争策略，为我们的战略采购和合作伙伴选择提供了清晰的决策地图。</p>
-                    <canvas id="priceAdaptabilityChart"></canvas>
                 </div>
             </section>
 
@@ -391,9 +363,103 @@
                 </div>
             </section>
             
-            <!-- Section 7: Data Sources & References -->
+            <!-- Section 7: Case Study: TEENKING High-Pressure System Technical Analysis -->
+            <section id="teenking-analysis" class="mb-16">
+                <h2 class="text-2xl font-bold text-center mb-8 text-gray-900 border-b-2 border-blue-500 pb-2 inline-block">7. 案例分析：天擎(TEENKING)高压系统技术解析</h2>
+                <p class="text-center text-gray-600 max-w-3xl mx-auto mb-10">为深入理解报价背后的技术价值，本章以天擎TKE-L系统（报价 ¥420,000）为例，解构其核心系统配置与经济效益。</p>
+                
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-4">核心技术：全球供应链的整合</h3>
+                    <p class="mb-4">该系统的核心竞争力在于整合了全球一线品牌的成熟部件，构建了一个高稳定性的技术平台：</p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li><strong>高压系统 (心脏):</strong> 采用德国西门子(Siemens)主电机与德国力士乐(Rexroth)液压系统，确保了动力的稳定输出。</li>
+                        <li><strong>运动平台 (骨架):</strong> 由日本安川(Yaskawa)伺服系统驱动，配合台湾上银(HIWIN)传动部件，实现了±0.02mm的重复定位精度。</li>
+                        <li><strong>切割头 (工具):</strong> 标配的金刚石喷嘴(Diamond Orifice)是关键价值点，其寿命（>500小时）远超标准红宝石喷嘴（~30小时），显著降低了长期运营成本。</li>
+                    </ul>
+                </div>
+
+                <div class="card mt-8">
+                    <h3 class="text-xl font-bold mb-4">经济效益与市场定位</h3>
+                    <p class="mb-4">虽然初始投资（约$60k USD）高于国产基础机型，但在国际市场中，该配置的价格不到同等级欧美品牌的三分之一，体现了清晰的“中国价格，全球品质”市场策略。金刚石喷嘴的配置，在2000小时的运行周期内，可节省超过40%的喷嘴相关总成本（含停机损失），是降低总体拥有成本(TCO)的关键因素。</p>
+                </div>
+                 <div class="card mt-8">
+                    <h3 class="text-xl font-bold mb-4">战略性采购建议</h3>
+                    <p class="mb-4">为确保此类高性价比设备的投资成功，建议遵循以下关键流程：</p>
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                        <li><strong>书面确认规格:</strong> 在合同中明确所有关键部件的品牌和型号。</li>
+                        <li><strong>执行工厂验收(FAT):</strong> 在设备出厂前，对照合同清单进行实地核实与切割测试。</li>
+                        <li><strong>核算总落地成本:</strong> 全面预算运费、关税、安装调试及初期备件等所有费用。</li>
+                    </ol>
+                </div>
+            </section>
+            
+            <!-- Section 8: Asset Value Analysis -->
+            <section id="source" class="mb-16">
+                <h2 class="text-2xl font-bold text-center mb-8 text-gray-900 border-b-2 border-blue-500 pb-2 inline-block" data-lang-key="section3_title">8. 资产价值分析：二手市场数据洞察</h2>
+                <div class="bg-white rounded-lg shadow-md p-8">
+                    <p class="text-gray-700 mb-6" data-lang-key="section3_desc">为了提供一个透明且全面的投资视角，我们对公开的二手设备市场数据进行了分析。二手市场的交易价格是衡量一个品牌长期价值和市场认可度的重要指标，它直接关系到固定资产的保值能力和最终的投资回报。</p>
+                    
+                    <h4 class="font-bold text-lg mb-4" data-lang-key="section3_subtitle">二手市场数据参考：</h4>
+                    <div class="overflow-x-auto border rounded-lg">
+                        <table class="w-full text-left table-auto">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">品牌 / 型号状态／年份 / 地点</th>
+                                    <th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">价格</th>
+                                    <th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">来源链接</th>
+                                    <th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">说明</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 font-medium">Resato PJ‑2‑4000 (2009)<br><span class="text-xs text-gray-500">二手, 比利时</span></td>
+                                    <td class="px-6 py-4">€50,000</td>
+                                    <td class="px-6 py-4"><a href="https://machineryline.com/-/sale/waterjet-cutting-machines/Resato-PJ-2-4000--25051313014834774900" target="_blank" class="text-blue-600 hover:underline">machineryline.com</a></td>
+                                    <td class="px-6 py-4 text-xs">2009年设备，运行4580小时。</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 font-medium">Expert cut Variojet (2023)<br><span class="text-xs text-gray-500">展会样机, 德国</span></td>
+                                    <td class="px-6 py-4">€145,000 (EXW)</td>
+                                    <td class="px-6 py-4"><a href="https://www.used-machines.com/expert%2Binternational%2Bgmbh-cut%2Bexpert%2Bvariojet%2Bmit%2Bpumpe%2Bbft%2B40.22/gm-193-45236" target="_blank" class="text-blue-600 hover:underline">used-machines.com</a></td>
+                                    <td class="px-6 py-4 text-xs">2023年展会样机，仅45小时工时。</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 font-medium">Intermac Primus 322 (2019)<br><span class="text-xs text-gray-500">二手, 克罗地亚</span></td>
+                                    <td class="px-6 py-4">€77,000</td>
+                                    <td class="px-6 py-4"><a href="https://www.gindumac.com/product/intermac-primus-322_HR-CUT-WAT-2019-00001" target="_blank" class="text-blue-600 hover:underline">gindumac.com</a></td>
+                                    <td class="px-6 py-4 text-xs">5轴设备，状况良好。</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 font-medium">Water Jet Sweden NC 3045 DP (2011)<br><span class="text-xs text-gray-500">二手, 德国</span></td>
+                                    <td class="px-6 py-4">€145,000</td>
+                                    <td class="px-6 py-4"><a href="https://www.exapro.com/water-jet-sweden-nc-3045-dp-p79007605/" target="_blank" class="text-blue-600 hover:underline">exapro.com</a></td>
+                                    <td class="px-6 py-4 text-xs">双切割头的高精度型号。</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 font-medium">Flow Mach 100 (2018)<br><span class="text-xs text-gray-500">二手, 波兰</span></td>
+                                    <td class="px-6 py-4">€116,000</td>
+                                    <td class="px-6 py-4"><a href="https://www.exapro.com/flow-mach-100-p11061204/" target="_blank" class="text-blue-600 hover:underline">exapro.com</a></td>
+                                    <td class="px-6 py-4 text-xs">现代化的Flow设备，价格坚挺。</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 font-medium">Bystronic ByJet 3015 (2006)<br><span class="text-xs text-gray-500">二手, 匈牙利</span></td>
+                                    <td class="px-6 py-4">€41,500</td>
+                                    <td class="px-6 py-4"><a href="https://www.exapro.com/bystronic-byjet-3015-p10915802/" target="_blank" class="text-blue-600 hover:underline">exapro.com</a></td>
+                                    <td class="px-6 py-4 text-xs">知名品牌旧型号，价格较低。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
+                        <p class="font-semibold text-blue-800" data-lang-key="section3_conclusion_title">分析结论：</p>
+                        <p class="text-blue-700" data-lang-key="section3_conclusion_text">二手市场数据明确显示，欧洲领先品牌设备在多年使用后依然保持着强劲的资产价值。这种高保值率不仅验证了其新设备定价的合理性，更重要的是，它证明了投资于这些品牌代表着一项稳健的长期资本配置，能够有效抵御资产贬值风险，为股东创造持久价值。</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 9: Data Sources & References -->
             <section id="references">
-                <h2 class="text-2xl font-bold text-center mb-8 text-gray-900 border-b-2 border-blue-500 pb-2 inline-block">7. 参考文献与数据来源</h2>
+                <h2 class="text-2xl font-bold text-center mb-8 text-gray-900 border-b-2 border-blue-500 pb-2 inline-block">9. 参考文献与数据来源</h2>
                 <div class="bg-white rounded-lg shadow-md p-8 text-gray-700 text-sm">
                     <p class="mb-4">本报告的分析和结论基于对以下公开信息的综合研究，所有链接均已经过核查，可在线访问以获取更详细信息。</p>
                     <ul class="list-disc list-inside space-y-3">
@@ -673,6 +739,13 @@
             ];
 
             function createCharts() {
+                if (Chart.getChart("priceAdaptabilityChart")){
+                    Chart.getChart("priceAdaptabilityChart").destroy();
+                }
+                if (Chart.getChart("decisionMatrixChart")){
+                    Chart.getChart("decisionMatrixChart").destroy();
+                }
+
                 Chart.register(ChartDataLabels);
                 
                 // Price vs Adaptability Chart
