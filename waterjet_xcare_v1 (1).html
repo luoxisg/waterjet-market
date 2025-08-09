@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>蓝湿皮水刀切割系统：整合打印版（含原始数据表格与图表）</title>
+<!-- Libraries (keep for charts and Tailwind classes) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+<style>
+:root{
+  --accent:#0B6643; --text:#111; --muted:#666; --border:#E5E7EB; --bg:#fff;
+  --sans:"Segoe UI","Helvetica Neue",Arial,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.55}
+a{color:var(--accent);text-decoration:none} a:hover{opacity:.9;text-decoration:underline}
+h1,h2,h3{line-height:1.3;margin:0 0 .5rem}
+h1{font-size:28px;font-weight:800} h2{font-size:20px;font-weight:700} h3{font-size:16px;font-weight:700}
+p,li{font-size:12.5pt}
+.wrapper{width:100%;max-width:820px;margin:0 auto;padding:0 24px}
+header.site,footer.site{position:fixed;left:0;right:0;color:#444;z-index:999;background:#fff}
+header.site{top:0;border-bottom:1px solid var(--border)} footer.site{bottom:0;border-top:1px solid var(--border)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 24px}
+.brand{display:flex;align-items:center;gap:10px} .brand .logo{width:20px;height:20px;border-radius:4px;background:var(--accent)}
+.small{font-size:11pt;color:#666}
+.cover{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 0 60px}
+.cover-card{border:1px solid var(--border);border-radius:16px;padding:28px;max-width:720px;background:#fff;box-shadow:0 2px 20px rgba(0,0,0,.04)}
+.accent-line{height:3px;background:var(--accent);width:72px;border-radius:3px;margin:12px 0 2px}
+.section{padding:84px 0 40px}
+.section h2{border-bottom:3px solid var(--accent);display:inline-block;padding-bottom:4px}
+
+@page { size: A4; margin: 18mm 16mm 18mm 16mm; }
+@media print {
+  html,body{background:#fff}
+  .cover{page-break-after:always}
+  .section{break-inside:avoid-page}
+  .page-break{break-before:page}
+  .no-break{break-inside:avoid}
+  a{color:inherit;text-decoration:none}
+  .pager:after{content:"";}
+  .noprint{display:none !important}
+  .shadow, .shadow-md, .shadow-lg, .shadow-sm, [class*="shadow"] { box-shadow: none !important; border: 0.5pt solid #E5E7EB; }
+  .rounded-lg, .rounded, .rounded-md { border-radius: 4pt !important; }
+  .bg-white { background: #ffffff !important; }
+}
+@media screen {
+  body{padding-top:56px;padding-bottom:52px}
+  .pager:after{content:"";}
+}
+
+/* ==== BEGIN MERGED USER PRINT CSS ==== */
+
+
+/* ==== USER INLINE STYLES (MERGED) ==== */
+
+        body {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+        }
+        .rating-star {
+            color: #FBBF24; /* amber-400 */
+        }
+        .rating-star-muted {
+            color: #D1D5DB; /* gray-300 */
+        }
+
+        /* print.css — A4 + Consulting firm style print layout */
+        /* 仅在打印时生效 */
+        @media print {
+          /* A4 页面与页边距 */
+          @page {
+            size: A4 portrait;
+            margin: 18mm 18mm 20mm 18mm; /* 上/右/下/左 */
+          }
+
+          /* 基础：字体与颜色，确保打印效果 */
+          html, body {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+            color: #111827;
+            background: #ffffff !important;
+            font-family: "SF Pro Text", "Inter", "Noto Sans SC", system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+            line-height: 1.45;
+            font-size: 10pt;
+          }
+
+          /* 优化布局，减少空白 */
+          .container {
+            max-width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+          section, header.text-center {
+            margin-bottom: 1.5rem !important; 
+          }
+          
+          header, main, section, div, article, .card {
+            break-inside: avoid; /* 避免元素被切断 */
+          }
+
+          /* 标题层级 */
+          h1 { font-weight: 700; font-size: 22pt; margin: 0 0 10pt; }
+          h2 { font-weight: 700; font-size: 16pt; margin: 20pt 0 10pt; border-bottom: 1px solid #E5E7EB !important; padding-bottom: 5pt;}
+          h3 { font-weight: 600; font-size: 12pt; margin: 12pt 0 6pt; }
+          p, li { font-size: 10pt; margin-bottom: 0.5em; }
+
+          /* 表格风格优化 */
+          table { width: 100% !important; border-collapse: collapse; }
+          thead { background: #F9FAFB !important; }
+          th, td { border-bottom: 0.5pt solid #E5E7EB; padding: 5pt 7pt; font-size: 9pt; }
+          tr { break-inside: avoid; }
+
+          /* 图表/画布 */
+          canvas, svg, img { max-width: 100% !important; height: auto !important; break-inside: avoid; }
+          .chart-wrapper { break-inside: avoid; }
+
+          /* 卡片/阴影：打印去阴影、保留细边框 */
+          .shadow, .shadow-md, .shadow-lg, .shadow-sm, [class*="shadow"] { box-shadow: none !important; border: 0.5pt solid #E5E7EB; }
+          .rounded-lg, .rounded, .rounded-md { border-radius: 4pt !important; }
+          .bg-white { background: #ffffff !important; }
+          .border, .border-* { border-color: #E5E7EB !important; }
+
+          /* 隐藏不必要的交互元素 */
+          button, [role="button"], #lang-switcher { display: none !important; }
+          a { text-decoration: none; color: inherit; }
+          .text-blue-600 { color: #111827 !important; }
+
+
+          /* 翻页控制 */
+          h2, h3 { page-break-after: avoid; }
+          table, figure { page-break-inside: avoid; }
+        }
+    
+/* ==== END MERGED USER PRINT CSS ==== */
+
+/* === PRINT PATCH v2 === */
+
+@media print{
+  header.site, footer.site{ position: fixed; left:0; right:0; background:#fff; z-index:999; }
+  body{ margin:0 !important; padding-top:72px !important; padding-bottom:64px !important; }
+  #lang-switcher, .noprint{ display:none !important; }
+  a{ color: inherit; text-decoration: none; }
+  .cover{ min-height:auto; padding:40px 0 30px !important; }
+}
+@media screen{
+  body{ padding-top:56px; padding-bottom:52px; }
+}
+
+@media screen{ .pager:after{ content:""; } }
+@media print{ .pager:after{ content:""; } } /* hide custom page number to avoid Page 0 */
+@media print{ 
+  body{ padding-top:72px !important; padding-bottom:64px !important; }
+  .cover{ min-height:auto; padding:32px 0 28px !important; }
+}
+
+/* === Compact Print Layout Overrides === */
+@media print{
+  /* Only keep forced break after cover; disable others */
+  .page-break{ break-before: auto !important; }
+  .section{ break-inside: auto !important; }
+  /* Keep tables/figures from splitting mid-row */
+  table, thead, tbody, tr, figure, .fig{ break-inside: avoid; }
+  /* Tighter spacings */
+  h1{ margin: 0 0 10pt !important; }
+  h2{ margin: 14pt 0 8pt !important; border-bottom-width: 2px !important; }
+  h3{ margin: 10pt 0 6pt !important; }
+  p{ margin: 0 0 7pt !important; }
+  ul,ol{ margin: 6pt 0 8pt 18pt !important; }
+  .hr{ margin: 10pt 0 !important; }
+  /* Reduce container paddings */
+  .wrapper{ padding-left: 18px !important; padding-right: 18px !important; }
+  /* Avoid widow/orphan one-line paragraphs if supported */
+  p{ orphans: 2; widows: 2; }
+  /* Cover keeps single break after it */
+  .cover{ page-break-after: always !important; padding: 24px 0 16px !important; min-height: auto !important; }
+  /* Hide custom page counter if any (we often rely on browser header for accuracy) */
+  .pager:after{ content: "" !important; }
+}
+
+/* === Compact card style for brand grid === */
+#adaptability .grid{
+  gap: 12px !important;
+}
+#adaptability .grid > div{
+  padding: 12px 14px !important;
+  border-radius: 10px !important;
+}
+#adaptability h3{
+  font-size: 13.5pt !important;
+  margin: 2px 0 6px !important;
+  line-height: 1.25 !important;
+}
+#adaptability .font-semibold{ font-weight: 600 !important; }
+#adaptability .text-lg{ font-size: 11pt !important; }
+#adaptability p, 
+#adaptability .text-gray-700{
+  font-size: 10.5pt !important;
+  line-height: 1.45 !important;
+  margin: 6px 0 0 !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+#adaptability .flex.items-center{ margin: 2px 0 4px !important; }
+#adaptability .rating-star{ font-size: 11pt !important; }
+#adaptability .rating-star-muted{ font-size: 11pt !important; }
+
+/* Print: show 4 columns on A4 and keep cards short */
+@media print{
+  #adaptability .grid{
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+  #adaptability p, #adaptability .text-gray-700{
+    -webkit-line-clamp: 4;
+  }
+}
+/* Screen: at least 3 columns on desktop */
+@media screen and (min-width: 1024px){
+  #adaptability .grid{
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+}
+</style>
+<style>/* XCare theme placeholder CSS */</style></head>
+<body>
+<header class="site">
+<div class="bar wrapper">
+<div class="brand"><div class="logo"></div><div class="name">Consulting Report</div></div>
+<div class="pager"></div>
+</div>
+</header>
+<footer class="site">
+<div class="bar wrapper">
+<div class="small">Confidential – For Internal Review • 打印：A4 / 100% / 背景图形✓ / 关闭浏览器页眉页脚</div>
+<div class="small">2025-08-09</div>
+</div>
+</footer>
+<section class="cover wrapper">
+<div class="cover-card">
+<div aria-hidden="true" class="accent-line"></div>
+<h1>蓝湿皮水刀切割系统：全球主要供应商战略定位分析报告</h1>
+<p class="small">合并原始网页内容（数据表格 + Chart.js 图表）并套用A4打印框架</p>
+</div>
+</section>
+<!-- ==== BEGIN: FULL USER BODY (INLINED) ==== -->
+<div class="wrapper">
+<div class="container mx-auto p-4 sm:p-6 lg:p-8">
+<div class="flex justify-end mb-4">
+<button class="bg-white text-gray-800 font-semibold py-2 px-4 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 transition duration-200" id="lang-switcher">
+                English
+            </button>
+</div>
+<header class="text-center mb-12">
+<h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-2" data-lang-key="main_title">蓝湿皮水刀切割系统：全球主要供应商战略定位分析报告</h1>
+<p class="text-lg text-gray-600" data-lang-key="subtitle">为实现卓越运营与可持续增长的战略性技术投资决策提供支持</p>
+</header>
+<main>
+<!-- Section 1: Technical Suitability and Core Competencies -->
+<section class="mb-16" id="adaptability">
+<h2 class="text-2xl font-bold text-center mb-8 text-gray-900 border-b-2 border-blue-500 pb-2 inline-block" data-lang-key="section1_title">1. 技术适用性与核心竞争力分析</h2>
+<p class="text-center text-gray-600 max-w-3xl mx-auto mb-10" data-lang-key="section1_desc">蓝湿皮作为一种高价值的柔性材料，其无损、高精度的切割是提升成品率和保持高端品质的关键。纯水射流技术因其无热影响的特性成为理想选择。本节旨在评估各供应商的技术如何满足这一特定需求，并分析其核心竞争力。</p>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+<!-- Brand Cards -->
+<div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-600">
+<h3 class="text-xl font-bold mb-2"><span data-lang-key="brand_expert"></span> <span class="text-gray-500 font-normal text-lg" data-lang-key="country_de"></span></h3>
+<div class="flex items-center mb-4">
+<span class="font-semibold mr-2" data-lang-key="rating_label">适应性评级:</span>
+<span class="rating-star">★★★★★</span>
+</div>
+<p class="text-gray-700"><strong data-lang-key="competency_label">核心竞争力分析：</strong> <span data-lang-key="expert_comp">市场公认的技术领导者，专注于柔性材料的纯水切割。其技术壁垒体现在能最大程度保留蓝湿皮的天然特性，确保最高的切割质量和生产效率，是构建顶级制造能力的核心资产。</span></p>
+</div>
+<div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
+<h3 class="text-xl font-bold mb-2"><span data-lang-key="brand_perndorfer"></span> <span class="text-gray-500 font-normal text-lg" data-lang-key="country_at"></span></h3>
+<div class="flex items-center mb-4">
+<span class="font-semibold mr-2" data-lang-key="rating_label">适应性评级:</span>
+<div><span class="rating-star">★★★★</span><span class="rating-star-muted">★</span></div>
+</div>
+<p class="text-gray-700"><strong data-lang-key="competency_label">核心竞争力分析：</strong> <span data-lang-key="perndorfer_comp">核心优势在于强大的工程设计与定制化能力。能够为特定材料提供高度优化的系统解决方案，确保设备在长期高强度使用下的可靠性与一致性，是稳健投资的代表。</span></p>
+</div>
+<div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
+<h3 class="text-xl font-bold mb-2"><span data-lang-key="brand_cms"></span> <span class="text-gray-500 font-normal text-lg" data-lang-key="country_it"></span></h3>
+<div class="flex items-center mb-4">
+<span class="font-semibold mr-2" data-lang-key="rating_label">适应性评级:</span>
+<div><span class="rating-star">★★★★</span><span class="rating-star-muted">★</span></div>
+</div>
+<p class="text-gray-700"><strong data-lang-key="competency_label">核心竞争力分析：</strong> <span data-lang-key="cms_comp">依托SCM集团在软材料加工领域的深厚积淀，其设备在应用层面经过了广泛验证。能在保证高质量输出的同时，提供具有吸引力的投资回报率。</span></p>
+</div>
+<div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
+<h3 class="text-xl font-bold mb-2"><span data-lang-key="brand_waterjet"></span> <span class="text-gray-500 font-normal text-lg" data-lang-key="country_se"></span></h3>
+<div class="flex items-center mb-4">
+<span class="font-semibold mr-2" data-lang-key="rating_label">适应性评级:</span>
+<div><span class="rating-star">★★★★</span><span class="rating-star-muted">★</span></div>
+</div>
+<p class="text-gray-700"><strong data-lang-key="competency_label">核心竞争力分析：</strong> <span data-lang-key="waterjet_comp">品牌核心价值在于其顶级的机械精度和控制系统。对于追求极致工艺、希望在产品精度上建立绝对优势的企业而言，该品牌是实现技术超越的关键赋能者。</span></p>
+</div>
+<div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-teal-500">
+<h3 class="text-xl font-bold mb-2"><span data-lang-key="brand_resato"></span> <span class="text-gray-500 font-normal text-lg" data-lang-key="country_nl"></span></h3>
+<div class="flex items-center mb-4">
+<span class="font-semibold mr-2" data-lang-key="rating_label">适应性评级:</span>
+<div><span class="rating-star">★★★</span><span class="rating-star-muted">★★</span></div>
+</div>
+<p class="text-gray-700"><strong data-lang-key="competency_label">核心竞争力分析：</strong> <span data-lang-key="resato_comp">以性能可靠和系统稳定著称。虽然并非专为软材料优化，但其坚实的工程基础和可定制性，为寻求平衡成本与性能的用户提供了一个值得信赖的通用平台。</span></p>
+</div>
+<div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-teal-500">
+<h3 class="text-xl font-bold mb-2"><span data-lang-key="brand_head"></span> <span class="text-gray-500 font-normal text-lg" data-lang-key="country_cn"></span></h3>
+<div class="flex items-center mb-4">
+<span class="font-semibold mr-2" data-lang-key="rating_label">适应性评级:</span>
+<div><span class="rating-star">★★★</span><span class="rating-star-muted">★★</span></div>
+</div>
+<p class="text-gray-700"><strong data-lang-key="competency_label">核心竞争力分析：</strong> <span data-lang-key="head_comp">提供了进入五轴切割领域的高性价比路径。对于成本结构敏感、且对边缘质量要求相对宽容的市场，该品牌具有显著的成本优势。</span></p>
+</div>
+<div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-teal-500">
+<h3 class="text-xl font-bold mb-2"><span data-lang-key="brand_teenking"></span> <span class="text-gray-500 font-normal text-lg" data-lang-key="country_cn"></span></h3>
+<div class="flex items-center mb-4">
+<span class="font-semibold mr-2" data-lang-key="rating_label">适应性评级:</span>
+<div><span class="rating-star">★★★</span><span class="rating-star-muted">★★</span></div>
+</div>
+<p class="text-gray-700"><strong data-lang-key="competency_label">核心竞争力分析：</strong> <span data-lang-key="teenking_comp">专注于提供具有成本效益的解决方案。其自主控制系统在满足基本切割需求的前提下，为预算有限的项目提供了可行性。需关注其在欧洲市场的服务网络与响应能力。</span></p>
+</div>
+<div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-amber-500">
+<h3 class="text-xl font-bold mb-2"><span data-lang-key="brand_wanlin"></span> <span class="text-gray-500 font-normal text-lg" data-lang-key="country_cn"></span></h3>
+<div class="flex items-center mb-4">
+<span class="font-semibold mr-2" data-lang-key="rating_label">适应性评级:</span>
+<div><span class="rating-star">★★</span><span class="rating-star-muted">★★★</span></div>
+</div>
+<p class="text-gray-700"><strong data-lang-key="competency_label">核心竞争力分析：</strong> <span data-lang-key="wanlin_comp">定位于入门级市场，价格极具竞争力。但投资者需注意，这种成本优势可能伴随着技术支持、长期稳定性和服务网络方面的潜在风险，尤其是在对运营持续性要求高的欧洲市场。</span></p>
+</div>
+</div>
+</section>
+<!-- Section 2: Pressure Window & Pump Selection Strategy -->
+<section class="mb-16" id="pressure-analysis">
+<h2 class="text-2xl font-bold text-center mb-8 text-gray-900 border-b-2 border-blue-500 pb-2 inline-block">2. 蓝湿皮切割压力窗口与泵选型策略</h2>
+<div class="card">
+<h3 class="text-xl font-bold mb-4">核心结论</h3>
+<ul class="list-disc list-inside space-y-2 text-gray-700">
+<li><strong>推荐压力窗口:</strong> 蓝湿皮日常切割推荐运行在 <strong>220–320 MPa</strong>。此区间在切割速度和边缘质量之间取得了最佳平衡。400 MPa虽具备峰值性能，但需谨慎控制以避免损伤材料。</li>
+<li><strong>泵选型原则:</strong> 优先选择标称380–400 MPa的增压泵，但在日常工艺中降压使用，保留足够的技术余量以应对厚料或高速场景。</li>
+<li><strong>品牌差异与TCO:</strong> 国际品牌泵（如KMT, BFT）初始投资高，但因压力波动小、密封寿命长而拥有更可控的长期拥有成本(TCO)。国产品牌泵首购价低40-65%，但需接受更高的维护频率和潜在的停机风险。</li>
+</ul>
+</div>
+<div class="card mt-8">
+<h3 class="text-xl font-bold mb-4">高压泵关键指标对比：国际 vs. 国产品牌</h3>
+<div class="overflow-x-auto border rounded-lg">
+<table class="w-full text-left table-auto">
+<thead class="bg-gray-100">
+<tr>
+<th class="px-6 py-3 text-sm font-bold text-gray-600">指标</th>
+<th class="px-6 py-3 text-sm font-bold text-gray-600">国际品牌 (KMT, BFT等)</th>
+<th class="px-6 py-3 text-sm font-bold text-gray-600">国产品牌 (Teenking, HEAD等)</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-200">
+<tr>
+<td class="px-6 py-4 font-medium">压力稳定度</td>
+<td class="px-6 py-4">±0.5–1.0%</td>
+<td class="px-6 py-4">±1.5–3% (机型差异大)</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-medium">密封寿命 (纯水)</td>
+<td class="px-6 py-4">500–1,000+ 小时/套</td>
+<td class="px-6 py-4">200–600 小时/套</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-medium">新机价格 (30 HP级)</td>
+<td class="px-6 py-4">€70k–€100k</td>
+<td class="px-6 py-4">€20k–€35k</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-medium">5年TCO (维护段)</td>
+<td class="px-6 py-4">€55k–€85k (停机损失小)</td>
+<td class="px-6 py-4">€35k–€65k (备件便宜但次数多)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<!-- Section 3: Visualizing the Competitive Landscape -->
+<section class="mb-16" id="visualization">
+<h2 class="text-2xl font-bold text-center mb-8 text-gray-900 border-b-2 border-blue-500 pb-2 inline-block" data-lang-key="section4_title">3. 竞争格局可视化：市场定位矩阵</h2>
+<div class="bg-white rounded-lg shadow-md p-4 sm:p-8">
+<p class="text-center text-gray-600 mb-6" data-lang-key="section4_desc">本市场定位矩阵将“初始投资成本”与“技术适用性”两个核心维度进行可视化呈现。每个数据点代表一个供应商，其在矩阵中的位置直观地揭示了其市场定位和竞争策略，为我们的战略采购和合作伙伴选择提供了清晰的决策地图。</p>
+<canvas id="priceAdaptabilityChart"></canvas>
+</div>
+</section>
+<!-- Section 4: Market Price Structure and ROI Evaluation -->
+<section class="mb-16" id="price">
+<h2 class="text-2xl font-bold text-center mb-8 text-gray-900 border-b-2 border-blue-500 pb-2 inline-block" data-lang-key="section2_title">4. 市场价格体系与投资回报评估</h2>
+<div class="overflow-x-auto bg-white rounded-lg shadow-md">
+<table class="w-full text-left table-auto">
+<thead class="bg-gray-200">
+<tr>
+<th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider" data-lang-key="table1_brand">品牌名称</th>
+<th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider" data-lang-key="table1_price">价格范围 (€)</th>
+<th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider" data-lang-key="table1_rating">蓝湿皮适应性评级</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-200">
+<tr class="hover:bg-gray-50">
+<td class="px-6 py-4 font-medium"><span data-lang-key="brand_expert"></span> <span data-lang-key="country_de"></span></td>
+<td class="px-6 py-4">€180k - €230k</td>
+<td class="px-6 py-4"><span class="rating-star">★★★★★</span></td>
+</tr>
+<tr class="hover:bg-gray-50">
+<td class="px-6 py-4 font-medium"><span data-lang-key="brand_perndorfer"></span> <span data-lang-key="country_at"></span></td>
+<td class="px-6 py-4">€180k - €250k</td>
+<td class="px-6 py-4"><span class="rating-star">★★★★</span><span class="rating-star-muted">★</span></td>
+</tr>
+<tr class="hover:bg-gray-50">
+<td class="px-6 py-4 font-medium"><span data-lang-key="brand_cms"></span> <span data-lang-key="country_it"></span></td>
+<td class="px-6 py-4">€160k - €240k</td>
+<td class="px-6 py-4"><span class="rating-star">★★★★</span><span class="rating-star-muted">★</span></td>
+</tr>
+<tr class="hover:bg-gray-50">
+<td class="px-6 py-4 font-medium"><span data-lang-key="brand_waterjet"></span> <span data-lang-key="country_se"></span></td>
+<td class="px-6 py-4">€220k - €280k</td>
+<td class="px-6 py-4"><span class="rating-star">★★★★</span><span class="rating-star-muted">★</span></td>
+</tr>
+<tr class="hover:bg-gray-50">
+<td class="px-6 py-4 font-medium"><span data-lang-key="brand_resato"></span> <span data-lang-key="country_nl"></span></td>
+<td class="px-6 py-4">€150k - €220k</td>
+<td class="px-6 py-4"><span class="rating-star">★★★</span><span class="rating-star-muted">★★</span></td>
+</tr>
+<tr class="hover:bg-gray-50">
+<td class="px-6 py-4 font-medium"><span data-lang-key="brand_head"></span> <span data-lang-key="country_cn"></span></td>
+<td class="px-6 py-4">€72k - €108k</td>
+<td class="px-6 py-4"><span class="rating-star">★★★</span><span class="rating-star-muted">★★</span></td>
+</tr>
+<tr class="hover:bg-gray-50">
+<td class="px-6 py-4 font-medium"><span data-lang-key="brand_teenking"></span> <span data-lang-key="country_cn"></span></td>
+<td class="px-6 py-4" data-lang-key="teenking_price"></td>
+<td class="px-6 py-4"><span class="rating-star">★★★</span><span class="rating-star-muted">★★</span></td>
+</tr>
+<tr class="hover:bg-gray-50">
+<td class="px-6 py-4 font-medium"><span data-lang-key="brand_wanlin"></span> <span data-lang-key="country_cn"></span></td>
+<td class="px-6 py-4">€60k - €96k</td>
+<td class="px-6 py-4"><span class="rating-star">★★</span><span class="rating-star-muted">★★★</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Section 5: Total Cost of Ownership (TCO) Analysis -->
+<section class="mb-16" id="tco">
+<h2 class="text-2xl font-bold text-center mb-8 text-gray-900 border-b-2 border-blue-500 pb-2 inline-block" data-lang-key="section5_title">5. 总体拥有成本 (TCO) 分析与长期价值评估</h2>
+<div class="bg-white rounded-lg shadow-md p-8">
+<p class="text-gray-700 mb-6" data-lang-key="section5_desc">总体拥有成本(TCO)是评估一项资本投资真实价值的关键。它不仅包括初始采购价，更核心的是包含了未来多年的运营成本，特别是核心备品备件的消耗。例如，一个高质量的钻石喷嘴(Orifice)寿命可达上千小时，而一个普通喷嘴可能只有几十小时，更换频率的差异会显著影响长期成本。同样，高压密封件(Seals)的耐用性也直接关系到维护频率和停机时间。因此，TCO分析能揭示更深层的成本结构。</p>
+<div class="overflow-x-auto border rounded-lg">
+<table class="w-full text-left table-auto">
+<thead class="bg-gray-100">
+<tr>
+<th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider" data-lang-key="tco_table_brand">品牌</th>
+<th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider" data-lang-key="tco_table_initial">平均初始投资</th>
+<th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider" data-lang-key="tco_table_recurring">年均运营成本 (估)</th>
+<th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider" data-lang-key="tco_table_5yr">5年预估TCO</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-200 text-center">
+<tr>
+<td class="px-6 py-4 font-medium text-left" data-lang-key="brand_group_euro"></td>
+<td class="px-6 py-4">€210,000</td>
+<td class="px-6 py-4">€24,000</td>
+<td class="px-6 py-4 font-bold">€330,000</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-medium text-left" data-lang-key="brand_resato"></td>
+<td class="px-6 py-4">€185,000</td>
+<td class="px-6 py-4">€28,000</td>
+<td class="px-6 py-4 font-bold">€325,000</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-medium text-left" data-lang-key="brand_group_china_mid"></td>
+<td class="px-6 py-4">€95,000</td>
+<td class="px-6 py-4">€20,000</td>
+<td class="px-6 py-4 font-bold">€195,000</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-medium text-left" data-lang-key="brand_wanlin"></td>
+<td class="px-6 py-4">€78,000</td>
+<td class="px-6 py-4">€22,000</td>
+<td class="px-6 py-4 font-bold">€188,000</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mt-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
+<p class="font-semibold text-blue-800" data-lang-key="section5_conclusion_title">分析结论：</p>
+<p class="text-blue-700" data-lang-key="section5_conclusion_text">量化的TCO分析揭示了一个关键洞察：初始投资并非成本的全部。中国品牌在5年TCO上展现出巨大的领先优势。这一结论使得决策的焦点更加清晰：这是一个在极致的长期成本效益与顶级的初始性能、可靠性和资产保值率之间的战略权衡。对于成本敏感度极高、且能接受一定维护和停机风险的业务场景，中国品牌是极具吸引力的选择。</p>
+</div>
+</div>
+</section>
+<!-- Section 6: Strategic Investment Decision Matrix -->
+<section class="mb-16" id="decision-matrix">
+<h2 class="text-2xl font-bold text-center mb-8 text-gray-900 border-b-2 border-blue-500 pb-2 inline-block" data-lang-key="section6_title">6. 战略投资决策矩阵</h2>
+<div class="bg-white rounded-lg shadow-md p-4 sm:p-8">
+<p class="text-center text-gray-600 mb-6" data-lang-key="section6_desc">此矩阵将所有关键决策变量整合于一张图表：技术性能、长期成本（TCO）和前期资本投入。理想的投资目标位于图表的右下角区域，即以更低的总体拥有成本获得更高的技术价值。气泡的大小直观反映了初始投资的规模，为资本预算规划提供了参考。</p>
+<canvas id="decisionMatrixChart"></canvas>
+</div>
+</section>
+<!-- Section 7: Case Study: TEENKING High-Pressure System Technical Analysis -->
+<section class="mb-16" id="teenking-analysis">
+<h2 class="text-2xl font-bold text-center mb-8 text-gray-900 border-b-2 border-blue-500 pb-2 inline-block">7. 案例分析：天擎(TEENKING)高压系统技术解析</h2>
+<p class="text-center text-gray-600 max-w-3xl mx-auto mb-10">为深入理解报价背后的技术价值，本章以天擎TKE-L系统（报价 ¥420,000）为例，解构其核心系统配置与经济效益。</p>
+<div class="card">
+<h3 class="text-xl font-bold mb-4">核心技术：全球供应链的整合</h3>
+<p class="mb-4">该系统的核心竞争力在于整合了全球一线品牌的成熟部件，构建了一个高稳定性的技术平台：</p>
+<ul class="list-disc list-inside space-y-2 text-gray-700">
+<li><strong>高压系统 (心脏):</strong> 采用德国西门子(Siemens)主电机与德国力士乐(Rexroth)液压系统，确保了动力的稳定输出。</li>
+<li><strong>运动平台 (骨架):</strong> 由日本安川(Yaskawa)伺服系统驱动，配合台湾上银(HIWIN)传动部件，实现了±0.02mm的重复定位精度。</li>
+<li><strong>切割头 (工具):</strong> 标配的金刚石喷嘴(Diamond Orifice)是关键价值点，其寿命（&gt;500小时）远超标准红宝石喷嘴（~30小时），显著降低了长期运营成本。</li>
+</ul>
+</div>
+<div class="card mt-8">
+<h3 class="text-xl font-bold mb-4">经济效益与市场定位</h3>
+<p class="mb-4">虽然初始投资（约$60k USD）高于国产基础机型，但在国际市场中，该配置的价格不到同等级欧美品牌的三分之一，体现了清晰的“中国价格，全球品质”市场策略。金刚石喷嘴的配置，在2000小时的运行周期内，可节省超过40%的喷嘴相关总成本（含停机损失），是降低总体拥有成本(TCO)的关键因素。</p>
+</div>
+<div class="card mt-8">
+<h3 class="text-xl font-bold mb-4">战略性采购建议</h3>
+<p class="mb-4">为确保此类高性价比设备的投资成功，建议遵循以下关键流程：</p>
+<ol class="list-decimal list-inside space-y-2 text-gray-700">
+<li><strong>书面确认规格:</strong> 在合同中明确所有关键部件的品牌和型号。</li>
+<li><strong>执行工厂验收(FAT):</strong> 在设备出厂前，对照合同清单进行实地核实与切割测试。</li>
+<li><strong>核算总落地成本:</strong> 全面预算运费、关税、安装调试及初期备件等所有费用。</li>
+</ol>
+</div>
+</section>
+<!-- Section 8: Asset Value Analysis -->
+<section class="mb-16" id="source">
+<h2 class="text-2xl font-bold text-center mb-8 text-gray-900 border-b-2 border-blue-500 pb-2 inline-block" data-lang-key="section3_title">8. 资产价值分析：二手市场数据洞察</h2>
+<div class="bg-white rounded-lg shadow-md p-8">
+<p class="text-gray-700 mb-6" data-lang-key="section3_desc">为了提供一个透明且全面的投资视角，我们对公开的二手设备市场数据进行了分析。二手市场的交易价格是衡量一个品牌长期价值和市场认可度的重要指标，它直接关系到固定资产的保值能力和最终的投资回报。</p>
+<h4 class="font-bold text-lg mb-4" data-lang-key="section3_subtitle">二手市场数据参考：</h4>
+<div class="overflow-x-auto border rounded-lg">
+<table class="w-full text-left table-auto">
+<thead class="bg-gray-100">
+<tr>
+<th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">品牌 / 型号状态／年份 / 地点</th>
+<th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">价格</th>
+<th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">来源链接</th>
+<th class="px-6 py-3 text-sm font-bold text-gray-600 uppercase tracking-wider">说明</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-200">
+<tr>
+<td class="px-6 py-4 font-medium">Resato PJ‑2‑4000 (2009)<br/><span class="text-xs text-gray-500">二手, 比利时</span></td>
+<td class="px-6 py-4">€50,000</td>
+<td class="px-6 py-4"><a class="text-blue-600 hover:underline" href="https://machineryline.com/-/sale/waterjet-cutting-machines/Resato-PJ-2-4000--25051313014834774900" target="_blank">machineryline.com</a></td>
+<td class="px-6 py-4 text-xs">2009年设备，运行4580小时。</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-medium">Expert cut Variojet (2023)<br/><span class="text-xs text-gray-500">展会样机, 德国</span></td>
+<td class="px-6 py-4">€145,000 (EXW)</td>
+<td class="px-6 py-4"><a class="text-blue-600 hover:underline" href="https://www.used-machines.com/expert%2Binternational%2Bgmbh-cut%2Bexpert%2Bvariojet%2Bmit%2Bpumpe%2Bbft%2B40.22/gm-193-45236" target="_blank">used-machines.com</a></td>
+<td class="px-6 py-4 text-xs">2023年展会样机，仅45小时工时。</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-medium">Intermac Primus 322 (2019)<br/><span class="text-xs text-gray-500">二手, 克罗地亚</span></td>
+<td class="px-6 py-4">€77,000</td>
+<td class="px-6 py-4"><a class="text-blue-600 hover:underline" href="https://www.gindumac.com/product/intermac-primus-322_HR-CUT-WAT-2019-00001" target="_blank">gindumac.com</a></td>
+<td class="px-6 py-4 text-xs">5轴设备，状况良好。</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-medium">Water Jet Sweden NC 3045 DP (2011)<br/><span class="text-xs text-gray-500">二手, 德国</span></td>
+<td class="px-6 py-4">€145,000</td>
+<td class="px-6 py-4"><a class="text-blue-600 hover:underline" href="https://www.exapro.com/water-jet-sweden-nc-3045-dp-p79007605/" target="_blank">exapro.com</a></td>
+<td class="px-6 py-4 text-xs">双切割头的高精度型号。</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-medium">Flow Mach 100 (2018)<br/><span class="text-xs text-gray-500">二手, 波兰</span></td>
+<td class="px-6 py-4">€116,000</td>
+<td class="px-6 py-4"><a class="text-blue-600 hover:underline" href="https://www.exapro.com/flow-mach-100-p11061204/" target="_blank">exapro.com</a></td>
+<td class="px-6 py-4 text-xs">现代化的Flow设备，价格坚挺。</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-medium">Bystronic ByJet 3015 (2006)<br/><span class="text-xs text-gray-500">二手, 匈牙利</span></td>
+<td class="px-6 py-4">€41,500</td>
+<td class="px-6 py-4"><a class="text-blue-600 hover:underline" href="https://www.exapro.com/bystronic-byjet-3015-p10915802/" target="_blank">exapro.com</a></td>
+<td class="px-6 py-4 text-xs">知名品牌旧型号，价格较低。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mt-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
+<p class="font-semibold text-blue-800" data-lang-key="section3_conclusion_title">分析结论：</p>
+<p class="text-blue-700" data-lang-key="section3_conclusion_text">二手市场数据明确显示，欧洲领先品牌设备在多年使用后依然保持着强劲的资产价值。这种高保值率不仅验证了其新设备定价的合理性，更重要的是，它证明了投资于这些品牌代表着一项稳健的长期资本配置，能够有效抵御资产贬值风险，为股东创造持久价值。</p>
+</div>
+</div>
+</section>
+<!-- Section 9: Data Sources & References -->
+<section id="references">
+<h2 class="text-2xl font-bold text-center mb-8 text-gray-900 border-b-2 border-blue-500 pb-2 inline-block">9. 参考文献与数据来源</h2>
+<div class="bg-white rounded-lg shadow-md p-8 text-gray-700 text-sm">
+<p class="mb-4">本报告的分析和结论基于对以下公开信息的综合研究，所有链接均已经过核查，可在线访问以获取更详细信息。</p>
+<ul class="list-disc list-inside space-y-3">
+<li>
+<strong>核心数据：</strong>用户提供的《八品牌水刀系统配置深度对比表》为本次分析提供了基础技术规格和价格估算。
+                        </li>
+<li>
+<strong>Waterjet Sweden:</strong>
+<a class="text-blue-600 hover:underline" href="https://www.reviewonline.uk.com/water-jet-sweden-introduce-a-multi-purpose-waterjet-cutting-system/" target="_blank">行业新闻稿</a> - 关于其多功能水刀系统和市场定价的报道。
+                        </li>
+<li>
+<strong>Expert Systemtechnik:</strong>
+<a class="text-blue-600 hover:underline" href="https://www.expert-systemtechnik.de/en/" target="_blank">官方网站</a> - 关于其纯水切割技术的详细信息。
+                        </li>
+<li>
+<strong>CMS Tecnocut:</strong>
+<a class="text-blue-600 hover:underline" href="https://www.cmstecnocut.com/en/waterjet-cutting-machines/waterspeedy-s" target="_blank">产品页面 (Waterspeedy S)</a> - 针对特定材料（如泡棉）的解决方案。
+                        </li>
+<li>
+<strong>HEAD (海德):</strong>
+<a class="text-blue-600 hover:underline" href="https://www.alibaba.com/product-detail/Head-2030-Waterjet-Head-Cutting-Waterjet_1600505413817.html" target="_blank">阿里巴巴产品列表</a> - HEAD水刀切割机在B2B平台的销售页面。
+                        </li>
+<li>
+<strong>Teenking (天铿):</strong>
+<a class="text-blue-600 hover:underline" href="https://cnteenking.en.made-in-china.com/product/fXtmeOivAIWK/China-Teenking-CNC-Water-Jet-Machine-600-800-Mm-Water-Jet.html" target="_blank">中国制造网产品列表</a> - Teenking水刀在B2B平台的销售页面。
+                        </li>
+<li>
+<strong>Wanlin (万临):</strong>
+<a class="text-blue-600 hover:underline" href="https://www.alibaba.com/product-detail/fully-enclosed-micro-waterjet-cutter-water_1600432044239.html" target="_blank">阿里巴巴产品列表</a> - Wanlin水刀在B2B平台的销售页面。
+                        </li>
+<li>
+<strong>二手设备市场 (综合):</strong>
+<ul class="list-disc list-inside ml-4 mt-2 space-y-2">
+<li><a class="text-blue-600 hover:underline" href="https://machineryline.ie/-/waterjet-cutting-machines--c3847" target="_blank">Machineryline (爱尔兰)</a> - 提供了Resato二手设备的价格数据。</li>
+<li><a class="text-blue-600 hover:underline" href="https://machineryline.ng/-/sale/waterjet-cutting-machines/Perndorfer-WSS-4020--24052017070792854100" target="_blank">Machineryline (尼日利亚)</a> - 提供了Perndorfer二手设备的价格数据。</li>
+<li><a class="text-blue-600 hover:underline" href="https://surplusrecord.com/machinery-equipment/waterjet-cutting/" target="_blank">Surplus Record</a> - 提供了CMS Tecnocut等多种二手设备的价格信息。</li>
+<li><a class="text-blue-600 hover:underline" href="https://www.resale.info/en/water-jet-cutting-machines/used-water-jet-cutting-machines/rs-107-700/" target="_blank">Resale.info</a> - 提供了Waterjet Sweden和Expert等高端品牌二手设备的价格参考。</li>
+</ul>
+</li>
+<li>
+<strong>桌面级 vs. 工业级水刀对比:</strong>
+<ul class="list-disc list-inside ml-4 mt-2 space-y-2">
+<li><a class="text-blue-600 hover:underline" href="https://wazer.com/waterjets/shop-waterjets/" target="_blank">WAZER 官方商店</a> - 桌面级水刀的价格。</li>
+<li><a class="text-blue-600 hover:underline" href="https://www.matterhackers.com/store/l/wazer-desktop-waterjet-cutter-machine/sk/MVN5VKM5" target="_blank">MatterHackers (经销商)</a> - WAZER设备的技术规格和价格。</li>
+<li><a class="text-blue-600 hover:underline" href="https://www.eastvalleyprecision.com/how-much-does-a-waterjet-cutter-cost-2025/" target="_blank">East Valley Precision (行业分析)</a> - 关于工业级水刀成本的分析文章。</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</main>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- TRANSLATION DATA ---
+            const translations = {
+                zh: {
+                    doc_title: "蓝湿皮水刀切割系统：全球主要供应商战略定位分析报告",
+                    main_title: "蓝湿皮水刀切割系统：全球主要供应商战略定位分析报告",
+                    subtitle: "为实现卓越运营与可持续增长的战略性技术投资决策提供支持",
+                    section1_title: "1. 技术适用性与核心竞争力分析",
+                    section1_desc: "蓝湿皮作为一种高价值的柔性材料，其无损、高精度的切割是提升成品率和保持高端品质的关键。纯水射流技术因其无热影响的特性成为理想选择。本节旨在评估各供应商的技术如何满足这一特定需求，并分析其核心竞争力。",
+                    rating_label: "适应性评级:",
+                    competency_label: "核心竞争力分析：",
+                    expert_comp: "市场公认的技术领导者，专注于柔性材料的纯水切割。其技术壁垒体现在能最大程度保留蓝湿皮的天然特性，确保最高的切割质量和生产效率，是构建顶级制造能力的核心资产。",
+                    perndorfer_comp: "核心优势在于强大的工程设计与定制化能力。能够为特定材料提供高度优化的系统解决方案，确保设备在长期高强度使用下的可靠性与一致性，是稳健投资的代表。",
+                    cms_comp: "依托SCM集团在软材料加工领域的深厚积淀，其设备在应用层面经过了广泛验证。能在保证高质量输出的同时，提供具有吸引力的投资回报率。",
+                    waterjet_comp: "品牌核心价值在于其顶级的机械精度和控制系统。对于追求极致工艺、希望在产品精度上建立绝对优势的企业而言，该品牌是实现技术超越的关键赋能者。",
+                    resato_comp: "以性能可靠和系统稳定著称。虽然并非专为软材料优化，但其坚实的工程基础和可定制性，为寻求平衡成本与性能的用户提供了一个值得信赖的通用平台。",
+                    head_comp: "提供了进入五轴切割领域的高性价比路径。对于成本结构敏感、且对边缘质量要求相对宽容的市场，该品牌具有显著的成本优势。",
+                    teenking_comp: "专注于提供具有成本效益的解决方案。其自主控制系统在满足基本切割需求的前提下，为预算有限的项目提供了可行性。需关注其在欧洲市场的服务网络与响应能力。",
+                    wanlin_comp: "定位于入门级市场，价格极具竞争力。但投资者需注意，这种成本优势可能伴随着技术支持、长期稳定性和服务网络方面的潜在风险，尤其是在对运营持续性要求高的欧洲市场。",
+                    section1_1_title: "1.1. 关键技术指标与性能基准",
+                    section1_1_desc: "为确保对蓝湿皮实现最高质量的切割，理想的纯水射流系统需在多个技术层面达到顶尖标准。这些参数共同决定了切割边缘的光洁度、尺寸精度以及材料利用率，是评估系统长期价值和技术领先性的核心依据。",
+                    spec_table_aspect: "技术领域",
+                    spec_table_benchmark: "性能基准",
+                    spec_table_significance: "战略意义",
+                    spec_hp_system_title: "高压系统",
+                    spec_hp_system_benchmark: "压力波动 < ±1%；动态响应 < 50ms",
+                    spec_hp_system_significance: "保证复杂轮廓切割的边缘一致性",
+                    spec_cutting_head_title: "切割头总成",
+                    spec_cutting_head_benchmark: "钻石喷嘴 (0.08-0.12mm)；对中 < 0.01mm",
+                    spec_cutting_head_significance: "确保射流能量集中，提升精度与耗材寿命",
+                    spec_motion_control_title: "运动控制系统",
+                    spec_motion_control_benchmark: "重复定位精度 < ±0.02mm；速度前瞻算法",
+                    spec_motion_control_significance: "实现高精度复杂切割，防止拐角材料变形",
+                    spec_software_title: "软件与算法",
+                    spec_software_benchmark: "智能嵌套算法；专家工艺数据库",
+                    spec_software_significance: "最大化材料利用率，降低废品率",
+                    spec_structure_title: "机械结构",
+                    spec_structure_benchmark: "聚合物混凝土基座；平台平整度 < ±0.1mm/m",
+                    spec_structure_significance: "提供长期稳定性，吸收微振动，保证精度",
+                    section2_title: "2. 市场价格体系与投资回报评估",
+                    table1_brand: "品牌名称",
+                    table1_price: "价格范围 (€)",
+                    table1_rating: "蓝湿皮适应性评级",
+                    section3_title: "3. 资产价值分析：二手市场数据洞察",
+                    section3_desc: "为了提供一个透明且全面的投资视角，我们对公开的二手设备市场数据进行了分析。二手市场的交易价格是衡量一个品牌长期价值和市场认可度的重要指标，它直接关系到固定资产的保值能力和最终的投资回报。",
+                    section3_subtitle: "二手市场数据参考：",
+                    table2_brand: "品牌",
+                    table2_model: "二手设备型号与状况",
+                    table2_price: "二手市场标价",
+                    table2_source: "数据来源",
+                    model_ws: "5轴设备",
+                    model_expert_std: "Variojet 型 (标准二手)",
+                    model_expert_demo: "Variojet 型 (展会样机)",
+                    section3_conclusion_title: "分析结论：",
+                    section3_conclusion_text: "二手市场数据明确显示，欧洲领先品牌设备在多年使用后依然保持着强劲的资产价值。这种高保值率不仅验证了其新设备定价的合理性，更重要的是，它证明了投资于这些品牌代表着一项稳健的长期资本配置，能够有效抵御资产贬值风险，为股东创造持久价值。",
+                    section4_title: "4. 竞争格局可视化：市场定位矩阵",
+                    section4_desc: "本市场定位矩阵将“初始投资成本”与“技术适用性”两个核心维度进行可视化呈现。每个数据点代表一个供应商，其在矩阵中的位置直观地揭示了其市场定位和竞争策略，为我们的战略采购和合作伙伴选择提供了清晰的决策地图。",
+                    section5_title: "5. 总体拥有成本 (TCO) 分析与长期价值评估",
+                    section5_desc: "总体拥有成本(TCO)是评估一项资本投资真实价值的关键。它不仅包括初始采购价，更核心的是包含了未来多年的运营成本，特别是核心备品备件的消耗。例如，一个高质量的钻石喷嘴(Orifice)寿命可达上千小时，而一个普通喷嘴可能只有几十小时，更换频率的差异会显著影响长期成本。同样，高压密封件(Seals)的耐用性也直接关系到维护频率和停机时间。因此，TCO分析能揭示更深层的成本结构。",
+                    tco_table_brand: "品牌",
+                    tco_table_initial: "平均初始投资",
+                    tco_table_recurring: "年均运营成本 (估)",
+                    tco_table_5yr: "5年预估TCO",
+                    section5_conclusion_title: "分析结论：",
+                    section5_conclusion_text: "量化的TCO分析揭示了一个关键洞察：初始投资并非成本的全部。中国品牌在5年TCO上展现出巨大的领先优势。这一结论使得决策的焦点更加清晰：这是一个在极致的长期成本效益与顶级的初始性能、可靠性和资产保值率之间的战略权衡。对于成本敏感度极高、且能接受一定维护和停机风险的业务场景，中国品牌是极具吸引力的选择。",
+                    section6_title: "6. 战略投资决策矩阵",
+                    section6_desc: "此矩阵将所有关键决策变量整合于一张图表：技术性能、长期成本（TCO）和前期资本投入。理想的投资目标位于图表的右下角区域，即以更低的总体拥有成本获得更高的技术价值。气泡的大小直观反映了初始投资的规模，为资本预算规划提供了参考。",
+                    chart_title: "品牌定位：价格 vs. 蓝湿皮适应性",
+                    chart_x_axis: "技术适用性评级 (星)",
+                    chart_y_axis: "平均初始投资成本 (千欧元)",
+                    chart2_title: "战略投资决策矩阵",
+                    chart2_x_axis: "技术适用性评级 (星)",
+                    chart2_y_axis: "5年总体拥有成本 (千欧元)",
+                    tooltip_brand: "品牌",
+                    tooltip_rating: "评级",
+                    tooltip_avg_price: "平均价格",
+                    tooltip_price_range: "价格范围",
+                    tooltip_tco: "5年TCO",
+                    tooltip_initial_cost: "初始投资",
+                    lang_switch_en: "English",
+                    lang_switch_zh: "中文",
+                    brand_expert: "Expert",
+                    country_de: "(德国)",
+                    brand_perndorfer: "Perndorfer",
+                    country_at: "(奥地利)",
+                    brand_cms: "CMS Tecnocut",
+                    country_it: "(意大利)",
+                    brand_waterjet: "Waterjet Sweden",
+                    country_se: "(瑞典)",
+                    brand_resato: "Resato",
+                    country_nl: "(荷兰)",
+                    brand_head: "HEAD (海德)",
+                    country_cn: "(中国)",
+                    brand_teenking: "Teenking (天铿)",
+                    teenking_price: "约 €100k",
+                    brand_wanlin: "Wanlin (万临)",
+                    brand_group_euro: "欧洲高端品牌 (综合)",
+                    brand_group_china_mid: "中国中端品牌 (综合)",
+                    brand_sg_case: "新加坡XXX公司 (案例)"
+                },
+                en: {
+                    doc_title: "Wet Blue Waterjet Cutting Systems: A Strategic Positioning Analysis of Global Key Suppliers",
+                    main_title: "Wet Blue Waterjet Cutting Systems: A Strategic Positioning Analysis of Global Key Suppliers",
+                    subtitle: "Supporting Strategic Technology Investment Decisions for Operational Excellence and Sustainable Growth",
+                    section1_title: "1. Analysis of Technical Suitability and Core Competencies",
+                    section1_desc: "As a high-value flexible material, the non-destructive, high-precision cutting of wet blue leather is key to improving yield and maintaining premium quality. Pure waterjet technology is the ideal choice due to its non-thermal properties. This section aims to assess how each supplier's technology meets this specific need and to analyze their core competencies.",
+                    rating_label: "Adaptability Rating:",
+                    competency_label: "Core Competency Analysis:",
+                    expert_comp: "A recognized market leader in technology, specializing in pure water cutting for flexible materials. Its technical barrier is reflected in its ability to preserve the natural properties of wet blue leather to the greatest extent, ensuring the highest cutting quality and production efficiency, making it a core asset for building top-tier manufacturing capabilities.",
+                    perndorfer_comp: "The core advantage lies in its strong engineering design and customization capabilities. It can provide highly optimized system solutions for specific materials, ensuring the reliability and consistency of the equipment under long-term, high-intensity use, representing a solid investment.",
+                    cms_comp: "Leveraging the SCM Group's deep experience in the soft material processing field, its equipment has been extensively validated at the application level. It can deliver a high-quality output while offering an attractive return on investment.",
+                    waterjet_comp: "The brand's core value lies in its top-tier mechanical precision and control system. For companies pursuing ultimate craftsmanship and hoping to establish an absolute advantage in product precision, this brand is a key enabler for achieving technological superiority.",
+                    resato_comp: "Known for reliable performance and system stability. Although not specifically optimized for soft materials, its solid engineering foundation and customizability provide a trustworthy universal platform for users seeking a balance between cost and performance.",
+                    head_comp: "Offers a cost-effective pathway into the realm of five-axis cutting. For markets sensitive to cost structure and with relatively tolerant requirements for edge quality, this brand has a significant cost advantage.",
+                    teenking_comp: "Focuses on providing cost-effective solutions. Its proprietary control system makes projects with limited budgets feasible while meeting basic cutting needs. Attention should be paid to its service network and response capabilities in the European market.",
+                    wanlin_comp: "Positioned in the entry-level market with highly competitive pricing. However, investors should note that this cost advantage may be accompanied by potential risks in technical support, long-term stability, and service networks, especially in the European market where operational continuity is highly demanded.",
+                    section1_1_title: "1.1. Key Technical Specifications & Performance Benchmarks",
+                    section1_1_desc: "To ensure the highest quality cutting of wet blue leather, an ideal pure waterjet system must meet top-tier standards across multiple technical levels. These parameters collectively determine the finish of the cutting edge, dimensional accuracy, and material utilization, forming the core basis for assessing a system's long-term value and technological leadership.",
+                    spec_table_aspect: "Technical Area",
+                    spec_table_benchmark: "Performance Benchmark",
+                    spec_table_significance: "Strategic Significance",
+                    spec_hp_system_title: "High-Pressure System",
+                    spec_hp_system_benchmark: "Pressure Fluctuation < ±1%; Dynamic Response < 50ms",
+                    spec_hp_system_significance: "Ensures edge consistency in complex contours.",
+                    spec_cutting_head_title: "Cutting Head Assembly",
+                    spec_cutting_head_benchmark: "Diamond Orifice (0.08-0.12mm); Alignment < 0.01mm",
+                    spec_cutting_head_significance: "Focuses jet energy, improving precision and consumable life.",
+                    spec_motion_control_title: "Motion Control System",
+                    spec_motion_control_benchmark: "Repeatability < ±0.02mm; Velocity Look-ahead Algorithm",
+                    spec_motion_control_significance: "Enables high-precision cuts, prevents corner deformation.",
+                    spec_software_title: "Software & Algorithms",
+                    spec_software_benchmark: "Intelligent Nesting; Expert Process Database",
+                    spec_software_significance: "Maximizes material utilization, reducing waste.",
+                    spec_structure_title: "Mechanical Structure",
+                    spec_structure_benchmark: "Polymer Concrete Base; Platform Flatness < ±0.1mm/m",
+                    spec_structure_significance: "Provides long-term stability, absorbs micro-vibrations.",
+                    section2_title: "2. Market Price Structure and ROI Evaluation",
+                    table1_brand: "Brand Name",
+                    table1_price: "Price Range (€)",
+                    table1_rating: "Wet Blue Adaptability Rating",
+                    section3_title: "3. Asset Value Analysis: Insights from Second-hand Market Data",
+                    section3_desc: "To provide a transparent and comprehensive investment perspective, we have analyzed data from the public second-hand equipment market. The transaction price in the second-hand market is a crucial indicator of a brand's long-term value and market recognition, directly related to the residual value of fixed assets and the final return on investment.",
+                    section3_subtitle: "Second-hand Market Data Reference:",
+                    table2_brand: "Brand",
+                    table2_model: "Second-hand Model & Condition",
+                    table2_price: "Second-hand Market Price",
+                    table2_source: "Data Source",
+                    model_ws: "5-axis machine",
+                    model_expert_std: "Variojet model (standard used)",
+                    model_expert_demo: "Variojet model (exhibition demo)",
+                    section3_conclusion_title: "Analysis Conclusion:",
+                    section3_conclusion_text: "Second-hand market data clearly shows that leading European brand equipment maintains strong asset value even after years of use. This high residual value not only validates the pricing of their new equipment but, more importantly, proves that investing in these brands represents a sound long-term capital allocation that can effectively hedge against asset depreciation risks and create lasting value for shareholders.",
+                    section4_title: "4. Visualizing the Competitive Landscape: Market Positioning Matrix",
+                    section4_desc: "This market positioning matrix visualizes the two core dimensions of 'Initial Investment Cost' and 'Technical Suitability'. Each data point represents a supplier, and its position in the matrix intuitively reveals its market positioning and competitive strategy, providing a clear decision map for our strategic procurement and partner selection.",
+                    section5_title: "5. Total Cost of Ownership (TCO) Analysis & Long-term Value Assessment",
+                    section5_desc: "Total Cost of Ownership (TCO) is key to assessing the true value of a capital investment. It goes beyond the initial price to include multi-year operating costs, especially for critical spare parts. For instance, a high-quality diamond orifice can last over a thousand hours, while a standard one might last only a few dozen. This difference in replacement frequency significantly impacts long-term costs. Similarly, the durability of high-pressure seals directly affects maintenance schedules and downtime. TCO analysis thus reveals a deeper cost structure.",
+                    tco_table_brand: "Brand",
+                    tco_table_initial: "Avg. Initial Investment",
+                    tco_table_recurring: "Avg. Annual Operating Cost (Est.)",
+                    tco_table_5yr: "Est. 5-Year TCO",
+                    section5_conclusion_title: "Analysis Conclusion:",
+                    section5_conclusion_text: "The quantitative TCO analysis reveals a key insight: initial investment is not the whole story. Chinese brands show a significant leading advantage in 5-year total cost of ownership. This finding clarifies the decision-making focus: it is a strategic trade-off between maximum long-term cost-effectiveness and premium initial performance, reliability, and asset value. For business scenarios that are highly cost-sensitive and can accommodate certain maintenance and downtime risks, Chinese brands are a highly attractive option.",
+                    section6_title: "6. Strategic Investment Decision Matrix",
+                    section6_desc: "This matrix integrates all key decision variables into a single chart: technical performance, long-term cost (TCO), and upfront capital commitment. The ideal investment target is located in the bottom-right quadrant of the chart, representing higher technical value for a lower total cost of ownership. The size of the bubble visually reflects the scale of the initial investment, providing a reference for capital budgeting.",
+                    chart_title: "Brand Positioning: Price vs. Wet Blue Adaptability",
+                    chart_x_axis: "Technical Suitability Rating (Stars)",
+                    chart_y_axis: "Average Initial Investment Cost (k€)",
+                    chart2_title: "Strategic Investment Decision Matrix",
+                    chart2_x_axis: "Technical Suitability Rating (Stars)",
+                    chart2_y_axis: "5-Year Total Cost of Ownership (k€)",
+                    tooltip_brand: "Brand",
+                    tooltip_rating: "Rating",
+                    tooltip_avg_price: "Avg. Price",
+                    tooltip_price_range: "Price Range",
+                    tooltip_tco: "5-Yr TCO",
+                    tooltip_initial_cost: "Initial Cost",
+                    lang_switch_en: "English",
+                    lang_switch_zh: "中文",
+                    brand_expert: "Expert",
+                    country_de: "(Germany)",
+                    brand_perndorfer: "Perndorfer",
+                    country_at: "(Austria)",
+                    brand_cms: "CMS Tecnocut",
+                    country_it: "(Italy)",
+                    brand_waterjet: "Waterjet Sweden",
+                    country_se: "(Sweden)",
+                    brand_resato: "Resato",
+                    country_nl: "(Netherlands)",
+                    brand_head: "HEAD",
+                    country_cn: "(China)",
+                    brand_teenking: "Teenking",
+                    teenking_price: "approx. €100k",
+                    brand_wanlin: "Wanlin",
+                    brand_group_euro: "Premium European Brands (Avg.)",
+                    brand_group_china_mid: "Mid-tier Chinese Brands (Avg.)",
+                    brand_sg_case: "Singapore XXX Co. (Case)"
+                }
+            };
+
+            // --- CHART & LANGUAGE SWITCH LOGIC ---
+            let currentLang = 'zh';
+            let priceAdaptabilityChart, decisionMatrixChart;
+
+            const priceChartData = [
+                { x: 5, y: 205, brandKey: 'brand_expert', range: '€180k - €230k', rating: 5, backgroundColor: 'rgba(34, 197, 94, 0.8)', borderColor: 'rgba(22, 163, 74, 1)' },
+                { x: 4, y: 215, brandKey: 'brand_perndorfer', range: '€180k - €250k', rating: 4, backgroundColor: 'rgba(59, 130, 246, 0.8)', borderColor: 'rgba(37, 99, 235, 1)' },
+                { x: 4, y: 200, brandKey: 'brand_cms', range: '€160k - €240k', rating: 4, backgroundColor: 'rgba(59, 130, 246, 0.8)', borderColor: 'rgba(37, 99, 235, 1)' },
+                { x: 4, y: 250, brandKey: 'brand_waterjet', range: '€220k - €280k', rating: 4, backgroundColor: 'rgba(59, 130, 246, 0.8)', borderColor: 'rgba(37, 99, 235, 1)' },
+                { x: 3, y: 185, brandKey: 'brand_resato', range: '€150k - €220k', rating: 3, backgroundColor: 'rgba(20, 184, 166, 0.8)', borderColor: 'rgba(13, 148, 136, 1)' },
+                { x: 3, y: 90, brandKey: 'brand_head', range: '€72k - €108k', rating: 3, backgroundColor: 'rgba(20, 184, 166, 0.8)', borderColor: 'rgba(13, 148, 136, 1)' },
+                { x: 3, y: 100, brandKey: 'brand_teenking', range: 'approx. €100k', rating: 3, backgroundColor: 'rgba(20, 184, 166, 0.8)', borderColor: 'rgba(13, 148, 136, 1)' },
+                { x: 2, y: 78, brandKey: 'brand_wanlin', range: '€60k - €96k', rating: 2, backgroundColor: 'rgba(245, 158, 11, 0.8)', borderColor: 'rgba(217, 119, 6, 1)' }
+            ];
+            
+            const tcoChartData = [
+                { brandKey: 'brand_group_euro', x: 4.25, y: 330, r: 21, initialCost: 210, rating: 4.25, backgroundColor: 'rgba(59, 130, 246, 0.7)'},
+                { brandKey: 'brand_resato', x: 3, y: 325, r: 18.5, initialCost: 185, rating: 3, backgroundColor: 'rgba(20, 184, 166, 0.7)'},
+                { brandKey: 'brand_group_china_mid', x: 3, y: 195, r: 9.5, initialCost: 95, rating: 3, backgroundColor: 'rgba(13, 148, 136, 0.7)'},
+                { brandKey: 'brand_wanlin', x: 2, y: 188, r: 7.8, initialCost: 78, rating: 2, backgroundColor: 'rgba(245, 158, 11, 0.7)'},
+                { brandKey: 'brand_sg_case', x: 5, y: 260, r: 15, initialCost: 150, rating: 5, backgroundColor: 'rgba(239, 68, 68, 0.7)'}
+            ];
+
+            function createCharts() {
+                if (Chart.getChart("priceAdaptabilityChart")){
+                    Chart.getChart("priceAdaptabilityChart").destroy();
+                }
+                if (Chart.getChart("decisionMatrixChart")){
+                    Chart.getChart("decisionMatrixChart").destroy();
+                }
+
+                Chart.register(ChartDataLabels);
+                
+                // Price vs Adaptability Chart
+                const priceCtx = document.getElementById('priceAdaptabilityChart').getContext('2d');
+                priceAdaptabilityChart = new Chart(priceCtx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            data: priceChartData,
+                            backgroundColor: priceChartData.map(d => d.backgroundColor),
+                            borderColor: priceChartData.map(d => d.borderColor)
+                        }]
+                    },
+                    options: getPriceChartOptions()
+                });
+
+                // TCO Decision Matrix Chart
+                const tcoCtx = document.getElementById('decisionMatrixChart').getContext('2d');
+                decisionMatrixChart = new Chart(tcoCtx, {
+                    type: 'bubble',
+                    data: {
+                        datasets: [{
+                           label: 'Brands',
+                           data: tcoChartData,
+                           backgroundColor: tcoChartData.map(d => d.backgroundColor)
+                        }]
+                    },
+                    options: getTcoChartOptions()
+                });
+            }
+            
+            function getPriceChartOptions() {
+                const lang = currentLang;
+                return {
+                    responsive: true, maintainAspectRatio: true, aspectRatio: 1.2,
+                    plugins: {
+                        datalabels: {
+                            display: true, color: '#374151', font: { weight: 'bold', family: "'Noto Sans SC', sans-serif" },
+                            formatter: (value) => translations[lang][value.brandKey],
+                            align: (context) => {
+                                const brandKey = context.chart.data.datasets[0].data[context.dataIndex].brandKey;
+                                switch (brandKey) {
+                                    case 'brand_cms': return 'bottom';
+                                    case 'brand_perndorfer': return 'left';
+                                    case 'brand_head': return 'bottom';
+                                    case 'brand_teenking': return 'right';
+                                    default: return 'top';
+                                }
+                            },
+                            offset: 8,
+                            textAlign: (context) => {
+                                const brandKey = context.chart.data.datasets[0].data[context.dataIndex].brandKey;
+                                return (brandKey === 'brand_perndorfer') ? 'left' : (brandKey === 'brand_teenking') ? 'right' : 'center';
+                            }
+                        },
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    const point = context.raw;
+                                    const t = translations[lang];
+                                    let label = [];
+                                    label.push(`${t.tooltip_brand}: ${t[point.brandKey]}`);
+                                    label.push(`${t.tooltip_rating}: ${'★'.repeat(point.rating)}${'☆'.repeat(5 - point.rating)}`);
+                                    label.push(`${t.tooltip_avg_price}: ~€${point.y}k`);
+                                    const rangeKey = point.brandKey === 'brand_teenking' ? 'teenking_price' : null;
+                                    label.push(`${t.tooltip_price_range}: ${rangeKey ? t[rangeKey] : point.range}`);
+                                    return label;
+                                }
+                            },
+                            bodyFont: { family: "'Noto Sans SC', sans-serif" }, titleFont: { family: "'Noto Sans SC', sans-serif" }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear', position: 'bottom', min: 1.5, max: 5.5,
+                            title: { display: true, text: translations[lang].chart_x_axis, font: { size: 14, family: "'Noto Sans SC', sans-serif" } },
+                            ticks: { stepSize: 1 }
+                        },
+                        y: {
+                            min: 50, max: 300,
+                            title: { display: true, text: translations[lang].chart_y_axis, font: { size: 14, family: "'Noto Sans SC', sans-serif" } }
+                        }
+                    },
+                    elements: { point: { radius: 8, hoverRadius: 12, borderWidth: 2 } }
+                };
+            }
+
+            function getTcoChartOptions() {
+                const lang = currentLang;
+                return {
+                    responsive: true, maintainAspectRatio: true, aspectRatio: 1.2,
+                    plugins: {
+                        datalabels: {
+                            display: true,
+                            color: '#374151',
+                            font: { weight: 'bold', family: "'Noto Sans SC', sans-serif", size: 10 },
+                            align: 'top',
+                            anchor: 'end',
+                            offset: 8,
+                            formatter: (value) => {
+                                const t = translations[lang];
+                                const brandName = t[value.brandKey];
+                                if (lang === 'en') {
+                                    if (brandName.includes('European')) return 'EU Premium';
+                                    if (brandName.includes('Chinese')) return 'CN Mid-tier';
+                                    if (brandName.includes('Singapore')) return 'SG Case';
+                                }
+                                return brandName.split(' ')[0];
+                            }
+                        },
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: translations[lang].chart2_title,
+                            font: { size: 18, family: "'Noto Sans SC', sans-serif" },
+                            padding: { top: 10, bottom: 20 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    const point = context.raw;
+                                    const t = translations[lang];
+                                    let label = [];
+                                    label.push(`${t.tooltip_brand}: ${t[point.brandKey]}`);
+                                    label.push(`${t.tooltip_rating}: ${point.rating} ★`);
+                                    label.push(`${t.tooltip_tco}: €${point.y}k`);
+                                    label.push(`${t.tooltip_initial_cost}: €${point.initialCost}k`);
+                                    return label;
+                                }
+                            },
+                            bodyFont: { family: "'Noto Sans SC', sans-serif" }, titleFont: { family: "'Noto Sans SC', sans-serif" }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            min: 1.5, max: 5.5,
+                            title: { display: true, text: translations[lang].chart2_x_axis, font: { size: 14, family: "'Noto Sans SC', sans-serif" } }
+                        },
+                        y: {
+                            min: 180, max: 350,
+                            title: { display: true, text: translations[lang].chart2_y_axis, font: { size: 14, family: "'Noto Sans SC', sans-serif" } }
+                        }
+                    },
+                    elements: {
+                        point: {
+                           borderWidth: 2,
+                           borderColor: 'rgba(0,0,0,0.2)'
+                        }
+                    }
+                }
+            }
+
+            function switchLanguage(lang) {
+                currentLang = lang;
+                document.documentElement.lang = lang;
+                document.querySelectorAll('[data-lang-key]').forEach(el => {
+                    const key = el.dataset.langKey;
+                    if (translations[lang] && translations[lang][key] !== undefined) {
+                        el.innerHTML = translations[lang][key];
+                    }
+                });
+                
+                const switcher = document.getElementById('lang-switcher');
+                switcher.textContent = lang === 'zh' ? translations.zh.lang_switch_en : translations.en.lang_switch_zh;
+
+                // Update charts
+                if (priceAdaptabilityChart) {
+                    priceAdaptabilityChart.options = getPriceChartOptions();
+                    priceAdaptabilityChart.update();
+                }
+                if (decisionMatrixChart) {
+                    decisionMatrixChart.options = getTcoChartOptions();
+                    decisionMatrixChart.update();
+                }
+            }
+
+            createCharts();
+            switchLanguage('zh'); // Set initial language to Chinese
+
+            document.getElementById('lang-switcher').addEventListener('click', () => {
+                const newLang = currentLang === 'zh' ? 'en' : 'zh';
+                switchLanguage(newLang);
+            });
+        });
+    </script>
+</div>
+<!-- ==== END: FULL USER BODY ==== -->
+<script>
+
+
+// ==== USER INLINE SCRIPTS (MERGED) ====
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- TRANSLATION DATA ---
+            const translations = {
+                zh: {
+                    doc_title: "蓝湿皮水刀切割系统：全球主要供应商战略定位分析报告",
+                    main_title: "蓝湿皮水刀切割系统：全球主要供应商战略定位分析报告",
+                    subtitle: "为实现卓越运营与可持续增长的战略性技术投资决策提供支持",
+                    section1_title: "1. 技术适用性与核心竞争力分析",
+                    section1_desc: "蓝湿皮作为一种高价值的柔性材料，其无损、高精度的切割是提升成品率和保持高端品质的关键。纯水射流技术因其无热影响的特性成为理想选择。本节旨在评估各供应商的技术如何满足这一特定需求，并分析其核心竞争力。",
+                    rating_label: "适应性评级:",
+                    competency_label: "核心竞争力分析：",
+                    expert_comp: "市场公认的技术领导者，专注于柔性材料的纯水切割。其技术壁垒体现在能最大程度保留蓝湿皮的天然特性，确保最高的切割质量和生产效率，是构建顶级制造能力的核心资产。",
+                    perndorfer_comp: "核心优势在于强大的工程设计与定制化能力。能够为特定材料提供高度优化的系统解决方案，确保设备在长期高强度使用下的可靠性与一致性，是稳健投资的代表。",
+                    cms_comp: "依托SCM集团在软材料加工领域的深厚积淀，其设备在应用层面经过了广泛验证。能在保证高质量输出的同时，提供具有吸引力的投资回报率。",
+                    waterjet_comp: "品牌核心价值在于其顶级的机械精度和控制系统。对于追求极致工艺、希望在产品精度上建立绝对优势的企业而言，该品牌是实现技术超越的关键赋能者。",
+                    resato_comp: "以性能可靠和系统稳定著称。虽然并非专为软材料优化，但其坚实的工程基础和可定制性，为寻求平衡成本与性能的用户提供了一个值得信赖的通用平台。",
+                    head_comp: "提供了进入五轴切割领域的高性价比路径。对于成本结构敏感、且对边缘质量要求相对宽容的市场，该品牌具有显著的成本优势。",
+                    teenking_comp: "专注于提供具有成本效益的解决方案。其自主控制系统在满足基本切割需求的前提下，为预算有限的项目提供了可行性。需关注其在欧洲市场的服务网络与响应能力。",
+                    wanlin_comp: "定位于入门级市场，价格极具竞争力。但投资者需注意，这种成本优势可能伴随着技术支持、长期稳定性和服务网络方面的潜在风险，尤其是在对运营持续性要求高的欧洲市场。",
+                    section1_1_title: "1.1. 关键技术指标与性能基准",
+                    section1_1_desc: "为确保对蓝湿皮实现最高质量的切割，理想的纯水射流系统需在多个技术层面达到顶尖标准。这些参数共同决定了切割边缘的光洁度、尺寸精度以及材料利用率，是评估系统长期价值和技术领先性的核心依据。",
+                    spec_table_aspect: "技术领域",
+                    spec_table_benchmark: "性能基准",
+                    spec_table_significance: "战略意义",
+                    spec_hp_system_title: "高压系统",
+                    spec_hp_system_benchmark: "压力波动 < ±1%；动态响应 < 50ms",
+                    spec_hp_system_significance: "保证复杂轮廓切割的边缘一致性",
+                    spec_cutting_head_title: "切割头总成",
+                    spec_cutting_head_benchmark: "钻石喷嘴 (0.08-0.12mm)；对中 < 0.01mm",
+                    spec_cutting_head_significance: "确保射流能量集中，提升精度与耗材寿命",
+                    spec_motion_control_title: "运动控制系统",
+                    spec_motion_control_benchmark: "重复定位精度 < ±0.02mm；速度前瞻算法",
+                    spec_motion_control_significance: "实现高精度复杂切割，防止拐角材料变形",
+                    spec_software_title: "软件与算法",
+                    spec_software_benchmark: "智能嵌套算法；专家工艺数据库",
+                    spec_software_significance: "最大化材料利用率，降低废品率",
+                    spec_structure_title: "机械结构",
+                    spec_structure_benchmark: "聚合物混凝土基座；平台平整度 < ±0.1mm/m",
+                    spec_structure_significance: "提供长期稳定性，吸收微振动，保证精度",
+                    section2_title: "2. 市场价格体系与投资回报评估",
+                    table1_brand: "品牌名称",
+                    table1_price: "价格范围 (€)",
+                    table1_rating: "蓝湿皮适应性评级",
+                    section3_title: "3. 资产价值分析：二手市场数据洞察",
+                    section3_desc: "为了提供一个透明且全面的投资视角，我们对公开的二手设备市场数据进行了分析。二手市场的交易价格是衡量一个品牌长期价值和市场认可度的重要指标，它直接关系到固定资产的保值能力和最终的投资回报。",
+                    section3_subtitle: "二手市场数据参考：",
+                    table2_brand: "品牌",
+                    table2_model: "二手设备型号与状况",
+                    table2_price: "二手市场标价",
+                    table2_source: "数据来源",
+                    model_ws: "5轴设备",
+                    model_expert_std: "Variojet 型 (标准二手)",
+                    model_expert_demo: "Variojet 型 (展会样机)",
+                    section3_conclusion_title: "分析结论：",
+                    section3_conclusion_text: "二手市场数据明确显示，欧洲领先品牌设备在多年使用后依然保持着强劲的资产价值。这种高保值率不仅验证了其新设备定价的合理性，更重要的是，它证明了投资于这些品牌代表着一项稳健的长期资本配置，能够有效抵御资产贬值风险，为股东创造持久价值。",
+                    section4_title: "4. 竞争格局可视化：市场定位矩阵",
+                    section4_desc: "本市场定位矩阵将“初始投资成本”与“技术适用性”两个核心维度进行可视化呈现。每个数据点代表一个供应商，其在矩阵中的位置直观地揭示了其市场定位和竞争策略，为我们的战略采购和合作伙伴选择提供了清晰的决策地图。",
+                    section5_title: "5. 总体拥有成本 (TCO) 分析与长期价值评估",
+                    section5_desc: "总体拥有成本(TCO)是评估一项资本投资真实价值的关键。它不仅包括初始采购价，更核心的是包含了未来多年的运营成本，特别是核心备品备件的消耗。例如，一个高质量的钻石喷嘴(Orifice)寿命可达上千小时，而一个普通喷嘴可能只有几十小时，更换频率的差异会显著影响长期成本。同样，高压密封件(Seals)的耐用性也直接关系到维护频率和停机时间。因此，TCO分析能揭示更深层的成本结构。",
+                    tco_table_brand: "品牌",
+                    tco_table_initial: "平均初始投资",
+                    tco_table_recurring: "年均运营成本 (估)",
+                    tco_table_5yr: "5年预估TCO",
+                    section5_conclusion_title: "分析结论：",
+                    section5_conclusion_text: "量化的TCO分析揭示了一个关键洞察：初始投资并非成本的全部。中国品牌在5年TCO上展现出巨大的领先优势。这一结论使得决策的焦点更加清晰：这是一个在极致的长期成本效益与顶级的初始性能、可靠性和资产保值率之间的战略权衡。对于成本敏感度极高、且能接受一定维护和停机风险的业务场景，中国品牌是极具吸引力的选择。",
+                    section6_title: "6. 战略投资决策矩阵",
+                    section6_desc: "此矩阵将所有关键决策变量整合于一张图表：技术性能、长期成本（TCO）和前期资本投入。理想的投资目标位于图表的右下角区域，即以更低的总体拥有成本获得更高的技术价值。气泡的大小直观反映了初始投资的规模，为资本预算规划提供了参考。",
+                    chart_title: "品牌定位：价格 vs. 蓝湿皮适应性",
+                    chart_x_axis: "技术适用性评级 (星)",
+                    chart_y_axis: "平均初始投资成本 (千欧元)",
+                    chart2_title: "战略投资决策矩阵",
+                    chart2_x_axis: "技术适用性评级 (星)",
+                    chart2_y_axis: "5年总体拥有成本 (千欧元)",
+                    tooltip_brand: "品牌",
+                    tooltip_rating: "评级",
+                    tooltip_avg_price: "平均价格",
+                    tooltip_price_range: "价格范围",
+                    tooltip_tco: "5年TCO",
+                    tooltip_initial_cost: "初始投资",
+                    lang_switch_en: "English",
+                    lang_switch_zh: "中文",
+                    brand_expert: "Expert",
+                    country_de: "(德国)",
+                    brand_perndorfer: "Perndorfer",
+                    country_at: "(奥地利)",
+                    brand_cms: "CMS Tecnocut",
+                    country_it: "(意大利)",
+                    brand_waterjet: "Waterjet Sweden",
+                    country_se: "(瑞典)",
+                    brand_resato: "Resato",
+                    country_nl: "(荷兰)",
+                    brand_head: "HEAD (海德)",
+                    country_cn: "(中国)",
+                    brand_teenking: "Teenking (天铿)",
+                    teenking_price: "约 €100k",
+                    brand_wanlin: "Wanlin (万临)",
+                    brand_group_euro: "欧洲高端品牌 (综合)",
+                    brand_group_china_mid: "中国中端品牌 (综合)",
+                    brand_sg_case: "新加坡XXX公司 (案例)"
+                },
+                en: {
+                    doc_title: "Wet Blue Waterjet Cutting Systems: A Strategic Positioning Analysis of Global Key Suppliers",
+                    main_title: "Wet Blue Waterjet Cutting Systems: A Strategic Positioning Analysis of Global Key Suppliers",
+                    subtitle: "Supporting Strategic Technology Investment Decisions for Operational Excellence and Sustainable Growth",
+                    section1_title: "1. Analysis of Technical Suitability and Core Competencies",
+                    section1_desc: "As a high-value flexible material, the non-destructive, high-precision cutting of wet blue leather is key to improving yield and maintaining premium quality. Pure waterjet technology is the ideal choice due to its non-thermal properties. This section aims to assess how each supplier's technology meets this specific need and to analyze their core competencies.",
+                    rating_label: "Adaptability Rating:",
+                    competency_label: "Core Competency Analysis:",
+                    expert_comp: "A recognized market leader in technology, specializing in pure water cutting for flexible materials. Its technical barrier is reflected in its ability to preserve the natural properties of wet blue leather to the greatest extent, ensuring the highest cutting quality and production efficiency, making it a core asset for building top-tier manufacturing capabilities.",
+                    perndorfer_comp: "The core advantage lies in its strong engineering design and customization capabilities. It can provide highly optimized system solutions for specific materials, ensuring the reliability and consistency of the equipment under long-term, high-intensity use, representing a solid investment.",
+                    cms_comp: "Leveraging the SCM Group's deep experience in the soft material processing field, its equipment has been extensively validated at the application level. It can deliver a high-quality output while offering an attractive return on investment.",
+                    waterjet_comp: "The brand's core value lies in its top-tier mechanical precision and control system. For companies pursuing ultimate craftsmanship and hoping to establish an absolute advantage in product precision, this brand is a key enabler for achieving technological superiority.",
+                    resato_comp: "Known for reliable performance and system stability. Although not specifically optimized for soft materials, its solid engineering foundation and customizability provide a trustworthy universal platform for users seeking a balance between cost and performance.",
+                    head_comp: "Offers a cost-effective pathway into the realm of five-axis cutting. For markets sensitive to cost structure and with relatively tolerant requirements for edge quality, this brand has a significant cost advantage.",
+                    teenking_comp: "Focuses on providing cost-effective solutions. Its proprietary control system makes projects with limited budgets feasible while meeting basic cutting needs. Attention should be paid to its service network and response capabilities in the European market.",
+                    wanlin_comp: "Positioned in the entry-level market with highly competitive pricing. However, investors should note that this cost advantage may be accompanied by potential risks in technical support, long-term stability, and service networks, especially in the European market where operational continuity is highly demanded.",
+                    section1_1_title: "1.1. Key Technical Specifications & Performance Benchmarks",
+                    section1_1_desc: "To ensure the highest quality cutting of wet blue leather, an ideal pure waterjet system must meet top-tier standards across multiple technical levels. These parameters collectively determine the finish of the cutting edge, dimensional accuracy, and material utilization, forming the core basis for assessing a system's long-term value and technological leadership.",
+                    spec_table_aspect: "Technical Area",
+                    spec_table_benchmark: "Performance Benchmark",
+                    spec_table_significance: "Strategic Significance",
+                    spec_hp_system_title: "High-Pressure System",
+                    spec_hp_system_benchmark: "Pressure Fluctuation < ±1%; Dynamic Response < 50ms",
+                    spec_hp_system_significance: "Ensures edge consistency in complex contours.",
+                    spec_cutting_head_title: "Cutting Head Assembly",
+                    spec_cutting_head_benchmark: "Diamond Orifice (0.08-0.12mm); Alignment < 0.01mm",
+                    spec_cutting_head_significance: "Focuses jet energy, improving precision and consumable life.",
+                    spec_motion_control_title: "Motion Control System",
+                    spec_motion_control_benchmark: "Repeatability < ±0.02mm; Velocity Look-ahead Algorithm",
+                    spec_motion_control_significance: "Enables high-precision cuts, prevents corner deformation.",
+                    spec_software_title: "Software & Algorithms",
+                    spec_software_benchmark: "Intelligent Nesting; Expert Process Database",
+                    spec_software_significance: "Maximizes material utilization, reducing waste.",
+                    spec_structure_title: "Mechanical Structure",
+                    spec_structure_benchmark: "Polymer Concrete Base; Platform Flatness < ±0.1mm/m",
+                    spec_structure_significance: "Provides long-term stability, absorbs micro-vibrations.",
+                    section2_title: "2. Market Price Structure and ROI Evaluation",
+                    table1_brand: "Brand Name",
+                    table1_price: "Price Range (€)",
+                    table1_rating: "Wet Blue Adaptability Rating",
+                    section3_title: "3. Asset Value Analysis: Insights from Second-hand Market Data",
+                    section3_desc: "To provide a transparent and comprehensive investment perspective, we have analyzed data from the public second-hand equipment market. The transaction price in the second-hand market is a crucial indicator of a brand's long-term value and market recognition, directly related to the residual value of fixed assets and the final return on investment.",
+                    section3_subtitle: "Second-hand Market Data Reference:",
+                    table2_brand: "Brand",
+                    table2_model: "Second-hand Model & Condition",
+                    table2_price: "Second-hand Market Price",
+                    table2_source: "Data Source",
+                    model_ws: "5-axis machine",
+                    model_expert_std: "Variojet model (standard used)",
+                    model_expert_demo: "Variojet model (exhibition demo)",
+                    section3_conclusion_title: "Analysis Conclusion:",
+                    section3_conclusion_text: "Second-hand market data clearly shows that leading European brand equipment maintains strong asset value even after years of use. This high residual value not only validates the pricing of their new equipment but, more importantly, proves that investing in these brands represents a sound long-term capital allocation that can effectively hedge against asset depreciation risks and create lasting value for shareholders.",
+                    section4_title: "4. Visualizing the Competitive Landscape: Market Positioning Matrix",
+                    section4_desc: "This market positioning matrix visualizes the two core dimensions of 'Initial Investment Cost' and 'Technical Suitability'. Each data point represents a supplier, and its position in the matrix intuitively reveals its market positioning and competitive strategy, providing a clear decision map for our strategic procurement and partner selection.",
+                    section5_title: "5. Total Cost of Ownership (TCO) Analysis & Long-term Value Assessment",
+                    section5_desc: "Total Cost of Ownership (TCO) is key to assessing the true value of a capital investment. It goes beyond the initial price to include multi-year operating costs, especially for critical spare parts. For instance, a high-quality diamond orifice can last over a thousand hours, while a standard one might last only a few dozen. This difference in replacement frequency significantly impacts long-term costs. Similarly, the durability of high-pressure seals directly affects maintenance schedules and downtime. TCO analysis thus reveals a deeper cost structure.",
+                    tco_table_brand: "Brand",
+                    tco_table_initial: "Avg. Initial Investment",
+                    tco_table_recurring: "Avg. Annual Operating Cost (Est.)",
+                    tco_table_5yr: "Est. 5-Year TCO",
+                    section5_conclusion_title: "Analysis Conclusion:",
+                    section5_conclusion_text: "The quantitative TCO analysis reveals a key insight: initial investment is not the whole story. Chinese brands show a significant leading advantage in 5-year total cost of ownership. This finding clarifies the decision-making focus: it is a strategic trade-off between maximum long-term cost-effectiveness and premium initial performance, reliability, and asset value. For business scenarios that are highly cost-sensitive and can accommodate certain maintenance and downtime risks, Chinese brands are a highly attractive option.",
+                    section6_title: "6. Strategic Investment Decision Matrix",
+                    section6_desc: "This matrix integrates all key decision variables into a single chart: technical performance, long-term cost (TCO), and upfront capital commitment. The ideal investment target is located in the bottom-right quadrant of the chart, representing higher technical value for a lower total cost of ownership. The size of the bubble visually reflects the scale of the initial investment, providing a reference for capital budgeting.",
+                    chart_title: "Brand Positioning: Price vs. Wet Blue Adaptability",
+                    chart_x_axis: "Technical Suitability Rating (Stars)",
+                    chart_y_axis: "Average Initial Investment Cost (k€)",
+                    chart2_title: "Strategic Investment Decision Matrix",
+                    chart2_x_axis: "Technical Suitability Rating (Stars)",
+                    chart2_y_axis: "5-Year Total Cost of Ownership (k€)",
+                    tooltip_brand: "Brand",
+                    tooltip_rating: "Rating",
+                    tooltip_avg_price: "Avg. Price",
+                    tooltip_price_range: "Price Range",
+                    tooltip_tco: "5-Yr TCO",
+                    tooltip_initial_cost: "Initial Cost",
+                    lang_switch_en: "English",
+                    lang_switch_zh: "中文",
+                    brand_expert: "Expert",
+                    country_de: "(Germany)",
+                    brand_perndorfer: "Perndorfer",
+                    country_at: "(Austria)",
+                    brand_cms: "CMS Tecnocut",
+                    country_it: "(Italy)",
+                    brand_waterjet: "Waterjet Sweden",
+                    country_se: "(Sweden)",
+                    brand_resato: "Resato",
+                    country_nl: "(Netherlands)",
+                    brand_head: "HEAD",
+                    country_cn: "(China)",
+                    brand_teenking: "Teenking",
+                    teenking_price: "approx. €100k",
+                    brand_wanlin: "Wanlin",
+                    brand_group_euro: "Premium European Brands (Avg.)",
+                    brand_group_china_mid: "Mid-tier Chinese Brands (Avg.)",
+                    brand_sg_case: "Singapore XXX Co. (Case)"
+                }
+            };
+
+            // --- CHART & LANGUAGE SWITCH LOGIC ---
+            let currentLang = 'zh';
+            let priceAdaptabilityChart, decisionMatrixChart;
+
+            const priceChartData = [
+                { x: 5, y: 205, brandKey: 'brand_expert', range: '€180k - €230k', rating: 5, backgroundColor: 'rgba(34, 197, 94, 0.8)', borderColor: 'rgba(22, 163, 74, 1)' },
+                { x: 4, y: 215, brandKey: 'brand_perndorfer', range: '€180k - €250k', rating: 4, backgroundColor: 'rgba(59, 130, 246, 0.8)', borderColor: 'rgba(37, 99, 235, 1)' },
+                { x: 4, y: 200, brandKey: 'brand_cms', range: '€160k - €240k', rating: 4, backgroundColor: 'rgba(59, 130, 246, 0.8)', borderColor: 'rgba(37, 99, 235, 1)' },
+                { x: 4, y: 250, brandKey: 'brand_waterjet', range: '€220k - €280k', rating: 4, backgroundColor: 'rgba(59, 130, 246, 0.8)', borderColor: 'rgba(37, 99, 235, 1)' },
+                { x: 3, y: 185, brandKey: 'brand_resato', range: '€150k - €220k', rating: 3, backgroundColor: 'rgba(20, 184, 166, 0.8)', borderColor: 'rgba(13, 148, 136, 1)' },
+                { x: 3, y: 90, brandKey: 'brand_head', range: '€72k - €108k', rating: 3, backgroundColor: 'rgba(20, 184, 166, 0.8)', borderColor: 'rgba(13, 148, 136, 1)' },
+                { x: 3, y: 100, brandKey: 'brand_teenking', range: 'approx. €100k', rating: 3, backgroundColor: 'rgba(20, 184, 166, 0.8)', borderColor: 'rgba(13, 148, 136, 1)' },
+                { x: 2, y: 78, brandKey: 'brand_wanlin', range: '€60k - €96k', rating: 2, backgroundColor: 'rgba(245, 158, 11, 0.8)', borderColor: 'rgba(217, 119, 6, 1)' }
+            ];
+            
+            const tcoChartData = [
+                { brandKey: 'brand_group_euro', x: 4.25, y: 330, r: 21, initialCost: 210, rating: 4.25, backgroundColor: 'rgba(59, 130, 246, 0.7)'},
+                { brandKey: 'brand_resato', x: 3, y: 325, r: 18.5, initialCost: 185, rating: 3, backgroundColor: 'rgba(20, 184, 166, 0.7)'},
+                { brandKey: 'brand_group_china_mid', x: 3, y: 195, r: 9.5, initialCost: 95, rating: 3, backgroundColor: 'rgba(13, 148, 136, 0.7)'},
+                { brandKey: 'brand_wanlin', x: 2, y: 188, r: 7.8, initialCost: 78, rating: 2, backgroundColor: 'rgba(245, 158, 11, 0.7)'},
+                { brandKey: 'brand_sg_case', x: 5, y: 260, r: 15, initialCost: 150, rating: 5, backgroundColor: 'rgba(239, 68, 68, 0.7)'}
+            ];
+
+            function createCharts() {
+                if (Chart.getChart("priceAdaptabilityChart")){
+                    Chart.getChart("priceAdaptabilityChart").destroy();
+                }
+                if (Chart.getChart("decisionMatrixChart")){
+                    Chart.getChart("decisionMatrixChart").destroy();
+                }
+
+                Chart.register(ChartDataLabels);
+                
+                // Price vs Adaptability Chart
+                const priceCtx = document.getElementById('priceAdaptabilityChart').getContext('2d');
+                priceAdaptabilityChart = new Chart(priceCtx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            data: priceChartData,
+                            backgroundColor: priceChartData.map(d => d.backgroundColor),
+                            borderColor: priceChartData.map(d => d.borderColor)
+                        }]
+                    },
+                    options: getPriceChartOptions()
+                });
+
+                // TCO Decision Matrix Chart
+                const tcoCtx = document.getElementById('decisionMatrixChart').getContext('2d');
+                decisionMatrixChart = new Chart(tcoCtx, {
+                    type: 'bubble',
+                    data: {
+                        datasets: [{
+                           label: 'Brands',
+                           data: tcoChartData,
+                           backgroundColor: tcoChartData.map(d => d.backgroundColor)
+                        }]
+                    },
+                    options: getTcoChartOptions()
+                });
+            }
+            
+            function getPriceChartOptions() {
+                const lang = currentLang;
+                return {
+                    responsive: true, maintainAspectRatio: true, aspectRatio: 1.2,
+                    plugins: {
+                        datalabels: {
+                            display: true, color: '#374151', font: { weight: 'bold', family: "'Noto Sans SC', sans-serif" },
+                            formatter: (value) => translations[lang][value.brandKey],
+                            align: (context) => {
+                                const brandKey = context.chart.data.datasets[0].data[context.dataIndex].brandKey;
+                                switch (brandKey) {
+                                    case 'brand_cms': return 'bottom';
+                                    case 'brand_perndorfer': return 'left';
+                                    case 'brand_head': return 'bottom';
+                                    case 'brand_teenking': return 'right';
+                                    default: return 'top';
+                                }
+                            },
+                            offset: 8,
+                            textAlign: (context) => {
+                                const brandKey = context.chart.data.datasets[0].data[context.dataIndex].brandKey;
+                                return (brandKey === 'brand_perndorfer') ? 'left' : (brandKey === 'brand_teenking') ? 'right' : 'center';
+                            }
+                        },
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    const point = context.raw;
+                                    const t = translations[lang];
+                                    let label = [];
+                                    label.push(`${t.tooltip_brand}: ${t[point.brandKey]}`);
+                                    label.push(`${t.tooltip_rating}: ${'★'.repeat(point.rating)}${'☆'.repeat(5 - point.rating)}`);
+                                    label.push(`${t.tooltip_avg_price}: ~€${point.y}k`);
+                                    const rangeKey = point.brandKey === 'brand_teenking' ? 'teenking_price' : null;
+                                    label.push(`${t.tooltip_price_range}: ${rangeKey ? t[rangeKey] : point.range}`);
+                                    return label;
+                                }
+                            },
+                            bodyFont: { family: "'Noto Sans SC', sans-serif" }, titleFont: { family: "'Noto Sans SC', sans-serif" }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear', position: 'bottom', min: 1.5, max: 5.5,
+                            title: { display: true, text: translations[lang].chart_x_axis, font: { size: 14, family: "'Noto Sans SC', sans-serif" } },
+                            ticks: { stepSize: 1 }
+                        },
+                        y: {
+                            min: 50, max: 300,
+                            title: { display: true, text: translations[lang].chart_y_axis, font: { size: 14, family: "'Noto Sans SC', sans-serif" } }
+                        }
+                    },
+                    elements: { point: { radius: 8, hoverRadius: 12, borderWidth: 2 } }
+                };
+            }
+
+            function getTcoChartOptions() {
+                const lang = currentLang;
+                return {
+                    responsive: true, maintainAspectRatio: true, aspectRatio: 1.2,
+                    plugins: {
+                        datalabels: {
+                            display: true,
+                            color: '#374151',
+                            font: { weight: 'bold', family: "'Noto Sans SC', sans-serif", size: 10 },
+                            align: 'top',
+                            anchor: 'end',
+                            offset: 8,
+                            formatter: (value) => {
+                                const t = translations[lang];
+                                const brandName = t[value.brandKey];
+                                if (lang === 'en') {
+                                    if (brandName.includes('European')) return 'EU Premium';
+                                    if (brandName.includes('Chinese')) return 'CN Mid-tier';
+                                    if (brandName.includes('Singapore')) return 'SG Case';
+                                }
+                                return brandName.split(' ')[0];
+                            }
+                        },
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: translations[lang].chart2_title,
+                            font: { size: 18, family: "'Noto Sans SC', sans-serif" },
+                            padding: { top: 10, bottom: 20 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    const point = context.raw;
+                                    const t = translations[lang];
+                                    let label = [];
+                                    label.push(`${t.tooltip_brand}: ${t[point.brandKey]}`);
+                                    label.push(`${t.tooltip_rating}: ${point.rating} ★`);
+                                    label.push(`${t.tooltip_tco}: €${point.y}k`);
+                                    label.push(`${t.tooltip_initial_cost}: €${point.initialCost}k`);
+                                    return label;
+                                }
+                            },
+                            bodyFont: { family: "'Noto Sans SC', sans-serif" }, titleFont: { family: "'Noto Sans SC', sans-serif" }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            min: 1.5, max: 5.5,
+                            title: { display: true, text: translations[lang].chart2_x_axis, font: { size: 14, family: "'Noto Sans SC', sans-serif" } }
+                        },
+                        y: {
+                            min: 180, max: 350,
+                            title: { display: true, text: translations[lang].chart2_y_axis, font: { size: 14, family: "'Noto Sans SC', sans-serif" } }
+                        }
+                    },
+                    elements: {
+                        point: {
+                           borderWidth: 2,
+                           borderColor: 'rgba(0,0,0,0.2)'
+                        }
+                    }
+                }
+            }
+
+            function switchLanguage(lang) {
+                currentLang = lang;
+                document.documentElement.lang = lang;
+                document.querySelectorAll('[data-lang-key]').forEach(el => {
+                    const key = el.dataset.langKey;
+                    if (translations[lang] && translations[lang][key] !== undefined) {
+                        el.innerHTML = translations[lang][key];
+                    }
+                });
+                
+                const switcher = document.getElementById('lang-switcher');
+                switcher.textContent = lang === 'zh' ? translations.zh.lang_switch_en : translations.en.lang_switch_zh;
+
+                // Update charts
+                if (priceAdaptabilityChart) {
+                    priceAdaptabilityChart.options = getPriceChartOptions();
+                    priceAdaptabilityChart.update();
+                }
+                if (decisionMatrixChart) {
+                    decisionMatrixChart.options = getTcoChartOptions();
+                    decisionMatrixChart.update();
+                }
+            }
+
+            createCharts();
+            switchLanguage('zh'); // Set initial language to Chinese
+
+            document.getElementById('lang-switcher').addEventListener('click', () => {
+                const newLang = currentLang === 'zh' ? 'en' : 'zh';
+                switchLanguage(newLang);
+            });
+        });
+    
+</script>
+<script>// XCare theme placeholder JS</script></body>
+</html>
